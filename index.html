@@ -11,20 +11,18 @@
 
   <style>
     :root{
-      --bg:#071225;
-      --bg2:#0b1730;
-      --panel:#0c1b36;
-      --panel2:#112449;
-      --text:#f4f7ff;
-      --muted:rgba(244,247,255,.78);
-      --muted2:rgba(244,247,255,.56);
-      --line:rgba(125,211,252,.30);
+      --bg:#061223;
+      --panel:#0b1b36;
+      --panel2:#102347;
+      --text:#f2f6ff;
+      --muted:rgba(242,246,255,.78);
+      --muted2:rgba(242,246,255,.56);
+      --line:rgba(125,211,252,.28);
       --lineSoft:rgba(255,255,255,.10);
       --accent:#f1c40f;
       --accent2:#7dd3fc;
       --accent3:#a78bfa;
       --shadow:0 18px 42px rgba(0,0,0,.34);
-      --radius:26px;
     }
 
     *{box-sizing:border-box}
@@ -35,38 +33,31 @@
       font-family:Arial,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
       color:var(--text);
       background:
-        radial-gradient(1200px 700px at 8% 0%, rgba(59,130,246,.16), transparent 55%),
-        radial-gradient(900px 600px at 100% 0%, rgba(167,139,250,.11), transparent 50%),
+        radial-gradient(1100px 650px at 8% 0%, rgba(59,130,246,.15), transparent 55%),
+        radial-gradient(850px 550px at 100% 0%, rgba(167,139,250,.08), transparent 50%),
         linear-gradient(180deg, #04101f 0%, #071225 36%, #08152a 100%);
     }
 
     .wrap{
       max-width:1600px;
       margin:0 auto;
-      padding:26px 28px 40px;
+      padding:14px 22px 36px;
     }
 
     .hero{
       display:grid;
-      grid-template-columns:1fr;
+      grid-template-columns:auto 1fr auto;
       align-items:center;
       gap:18px;
-      margin-bottom:26px;
-      text-align:center;
-    }
-
-    .heroCenter{
-      max-width:1240px;
-      margin:0 auto;
+      margin-bottom:18px;
+      min-height:120px;
     }
 
     .logosBar{
       display:flex;
-      justify-content:center;
       align-items:center;
-      gap:30px;
-      flex-wrap:wrap;
-      margin-bottom:18px;
+      gap:18px;
+      min-width:250px;
     }
 
     .topLogo{
@@ -76,106 +67,48 @@
     }
 
     .aceLogo{
-      height:74px;
+      height:66px;
       width:auto;
     }
 
     .biofeedLogo{
-      height:68px;
+      height:58px;
       width:auto;
     }
 
-    .kicker{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:9px 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-      color:var(--muted);
-      font-size:13px;
-      margin-bottom:12px;
-      box-shadow:0 8px 22px rgba(0,0,0,.18);
-    }
-
-    .hero h1{
-      margin:0;
-      font-size:52px;
-      line-height:1.05;
+    .heroTitle{
+      text-align:center;
+      font-size:58px;
+      line-height:1.02;
       font-weight:900;
       letter-spacing:.2px;
-      text-wrap:balance;
+      margin:0;
       text-shadow:0 8px 30px rgba(0,0,0,.35);
     }
 
-    .heroSub{
-      margin-top:14px;
-      display:flex;
-      justify-content:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:12px 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-      color:var(--muted);
-      font-size:14px;
-      box-shadow:0 8px 22px rgba(0,0,0,.20);
-    }
-
     .heroAside{
-      text-align:center;
-      font-size:18px;
-      line-height:1.15;
+      text-align:right;
+      font-size:22px;
+      line-height:1.05;
       font-style:italic;
       color:var(--accent);
-      font-weight:700;
-      margin-top:12px;
+      font-weight:800;
+      min-width:260px;
     }
 
     .panel{
-      border:1px solid rgba(125,211,252,.20);
+      border:1px solid rgba(125,211,252,.18);
       background:
-        linear-gradient(180deg, rgba(17,30,58,.92) 0%, rgba(9,20,40,.96) 100%);
+        linear-gradient(180deg, rgba(17,30,58,.90) 0%, rgba(9,20,40,.96) 100%);
       border-radius:28px;
-      padding:26px;
+      padding:24px;
       box-shadow:var(--shadow);
-    }
-
-    .sectionHead{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:18px;
-      margin-bottom:22px;
-      padding-bottom:16px;
-      border-bottom:1px solid rgba(255,255,255,.08);
-    }
-
-    .sectionHead h2{
-      margin:0;
-      font-size:28px;
-      font-weight:900;
-      letter-spacing:.2px;
-    }
-
-    .rightInfo{
-      color:var(--muted2);
-      font-size:14px;
-      white-space:nowrap;
     }
 
     .cards{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:24px;
+      gap:22px;
       align-items:stretch;
     }
 
@@ -183,7 +116,7 @@
       position:relative;
       display:flex;
       flex-direction:column;
-      min-height:420px;
+      min-height:410px;
       padding:22px;
       border-radius:24px;
       text-decoration:none;
@@ -233,7 +166,7 @@
     .card h3{
       margin:0 0 12px;
       font-size:22px;
-      line-height:1.1;
+      line-height:1.08;
       font-weight:900;
       letter-spacing:.2px;
       position:relative;
@@ -254,8 +187,7 @@
       margin-top:24px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.08);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
       padding:14px;
       position:relative;
       z-index:1;
@@ -284,8 +216,7 @@
       height:110px;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.08);
-      background:
-        linear-gradient(180deg, rgba(125,211,252,.18), rgba(255,255,255,.03));
+      background:linear-gradient(180deg, rgba(125,211,252,.18), rgba(255,255,255,.03));
       position:relative;
       overflow:hidden;
     }
@@ -390,8 +321,8 @@
     .stack{
       display:grid;
       grid-template-rows:1fr 1fr;
-      gap:24px;
-      min-height:420px;
+      gap:22px;
+      min-height:410px;
     }
 
     .card.small{
@@ -408,17 +339,34 @@
     }
 
     .footerNote{
-      margin-top:22px;
+      margin-top:18px;
       color:var(--muted2);
       font-size:13px;
       text-align:center;
     }
 
-    @media (max-width:1200px){
-      .hero h1{
-        font-size:42px;
+    @media (max-width:1380px){
+      .hero{
+        grid-template-columns:1fr;
+        text-align:center;
       }
 
+      .logosBar{
+        justify-content:center;
+        min-width:auto;
+      }
+
+      .heroAside{
+        text-align:center;
+        min-width:auto;
+      }
+
+      .heroTitle{
+        font-size:46px;
+      }
+    }
+
+    @media (max-width:1180px){
       .cards{
         grid-template-columns:1fr 1fr;
       }
@@ -430,28 +378,14 @@
 
     @media (max-width:760px){
       .wrap{
-        padding:18px 16px 28px;
+        padding:14px 14px 24px;
       }
 
-      .aceLogo{height:54px;}
-      .biofeedLogo{height:48px;}
-
-      .logosBar{
-        gap:18px;
-      }
-
-      .hero h1{
-        font-size:32px;
-      }
-
-      .sectionHead{
-        flex-direction:column;
-        align-items:flex-start;
-      }
-
-      .rightInfo{
-        white-space:normal;
-      }
+      .aceLogo{height:52px;}
+      .biofeedLogo{height:45px;}
+      .logosBar{gap:14px;}
+      .heroTitle{font-size:30px;}
+      .heroAside{font-size:18px;}
 
       .cards{
         grid-template-columns:1fr;
@@ -480,38 +414,22 @@
   <div class="wrap">
 
     <header class="hero">
-      <div class="heroCenter">
+      <div class="logosBar">
+        <img src="ACE-white.png" alt="ACE" class="topLogo aceLogo">
+        <img src="biofeed.png" alt="Biofeed" class="topLogo biofeedLogo">
+      </div>
 
-        <div class="logosBar">
-          <img src="ACE-white.png" alt="ACE" class="topLogo aceLogo">
-          <img src="biofeed.png" alt="Biofeed" class="topLogo biofeedLogo">
-        </div>
+      <h1 class="heroTitle">Controlling i Portfele - Biofeed</h1>
 
-        <div class="kicker">Panel startowy</div>
-        <h1>Controlling i Portfele - Biofeed</h1>
-
-        <div class="heroSub">
-          <div class="chip">Dzisiaj: <strong class="js-today"></strong></div>
-          <div class="chip">Moduły: śruta sojowa i śruta rzepakowa</div>
-        </div>
-
-        <div class="heroAside">
-          Panel controllingowy dla Biofeed
-        </div>
-
+      <div class="heroAside">
+        Panel controllingowy<br>dla Biofeed
       </div>
     </header>
 
     <main class="panel">
-      <div class="sectionHead">
-        <h2>Dostępne moduły</h2>
-        <div class="rightInfo">Kliknij kafelek, aby wejść do wybranego folderu raportów</div>
-      </div>
-
       <div class="cards">
 
-        <!-- Zmieniasz tylko data-report-date -->
-        <a class="card reportCard" href="sruta-sojowa/" data-report-date="2026-03-24">
+        <a class="card reportCard" href="sbm/index.html" data-report-date="2026-03-24">
           <div class="cardTag">Controlling</div>
           <h3>Śruta sojowa - controlling</h3>
           <p>Wejście do raportów controllingowych, portfela zakupowego oraz bieżących materiałów dla śruty sojowej.</p>
@@ -537,8 +455,7 @@
           </div>
         </a>
 
-        <!-- Zmieniasz tylko data-report-date -->
-        <a class="card reportCard" href="sruta-rzepakowa/" data-report-date="2026-03-24">
+        <a class="card reportCard" href="rsm/index.html" data-report-date="2026-03-24">
           <div class="cardTag">Controlling</div>
           <h3>Śruta rzepakowa - controlling</h3>
           <p>Wejście do raportów controllingowych, portfela zakupowego oraz bieżących materiałów dla śruty rzepakowej.</p>
@@ -566,8 +483,7 @@
 
         <div class="stack">
 
-          <!-- Zmieniasz tylko data-report-date -->
-          <a class="card small reportCard" href="podsumowanie-sruta-sojowa/" data-report-date="2026-03-24">
+          <a class="card small reportCard" href="sbm-podsumowanie/index.html" data-report-date="2026-03-24">
             <div class="cardTag">Podsumowanie</div>
             <h3>Podsumowanie śruta sojowa</h3>
             <p>Szybkie wejście do krótszych materiałów, komentarzy i zbiorczych podsumowań dla śruty sojowej.</p>
@@ -584,8 +500,7 @@
             </div>
           </a>
 
-          <!-- Zmieniasz tylko data-report-date -->
-          <a class="card small reportCard" href="podsumowanie-sruta-rzepakowa/" data-report-date="2026-03-24">
+          <a class="card small reportCard" href="rsm-podsumowanie/index.html" data-report-date="2026-03-24">
             <div class="cardTag">Podsumowanie</div>
             <h3>Podsumowanie śruta rzepakowa</h3>
             <p>Szybkie wejście do krótszych materiałów, komentarzy i zbiorczych podsumowań dla śruty rzepakowej.</p>
@@ -606,7 +521,7 @@
       </div>
 
       <div class="footerNote">
-        Strona startowa modułu Biofeed. Każdy kafelek prowadzi do osobnego folderu z plikami HTML.
+        Każdy kafelek prowadzi do osobnego folderu z raportem HTML.
       </div>
     </main>
   </div>
@@ -628,12 +543,7 @@
 
     document.addEventListener('DOMContentLoaded', function(){
       const now = new Date();
-      const todayPL = formatDatePL(now);
       const todayISO = formatIsoLocal(now);
-
-      document.querySelectorAll('.js-today').forEach(el => {
-        el.textContent = todayPL;
-      });
 
       document.querySelectorAll('.reportCard').forEach(card => {
         const reportDate = card.dataset.reportDate;
@@ -649,8 +559,7 @@
           return;
         }
 
-        const formattedPL = `${parts[2]}.${parts[1]}.${parts[0]}`;
-        dateSpan.textContent = formattedPL;
+        dateSpan.textContent = `${parts[2]}.${parts[1]}.${parts[0]}`;
 
         if (reportDate === todayISO) {
           badge.classList.add('is-today');
