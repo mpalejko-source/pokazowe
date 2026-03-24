@@ -13,89 +13,76 @@
     :root{
       --bg:#071225;
       --bg2:#0b1730;
-      --card:#0c1b36;
-      --card2:#112449;
-      --line:rgba(125,211,252,.32);
-      --line2:rgba(255,255,255,.12);
+      --panel:#0c1b36;
+      --panel2:#112449;
       --text:#f4f7ff;
       --muted:rgba(244,247,255,.78);
       --muted2:rgba(244,247,255,.56);
+      --line:rgba(125,211,252,.30);
+      --lineSoft:rgba(255,255,255,.10);
       --accent:#f1c40f;
       --accent2:#7dd3fc;
       --accent3:#a78bfa;
-      --shadow:0 16px 42px rgba(0,0,0,.34);
-      --radius:24px;
+      --shadow:0 18px 42px rgba(0,0,0,.34);
+      --radius:26px;
     }
 
     *{box-sizing:border-box}
     html,body{height:100%}
+
     body{
       margin:0;
       font-family:Arial,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
       color:var(--text);
       background:
         radial-gradient(1200px 700px at 8% 0%, rgba(59,130,246,.16), transparent 55%),
-        radial-gradient(900px 600px at 100% 0%, rgba(167,139,250,.12), transparent 50%),
-        linear-gradient(180deg, #04101f 0%, #071225 35%, #08152a 100%);
+        radial-gradient(900px 600px at 100% 0%, rgba(167,139,250,.11), transparent 50%),
+        linear-gradient(180deg, #04101f 0%, #071225 36%, #08152a 100%);
     }
 
     .wrap{
       max-width:1600px;
       margin:0 auto;
-      padding:28px 28px 40px;
+      padding:26px 28px 40px;
     }
 
     .hero{
       display:grid;
-      grid-template-columns:280px 1fr 280px;
+      grid-template-columns:1fr;
       align-items:center;
       gap:18px;
-      margin-bottom:28px;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:14px;
-    }
-
-    .brandMark{
-      width:72px;
-      height:72px;
-      border-radius:18px;
-      background:
-        linear-gradient(145deg, rgba(59,130,246,.28), rgba(125,211,252,.10)),
-        rgba(255,255,255,.03);
-      border:1px solid rgba(125,211,252,.26);
-      box-shadow:var(--shadow);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:34px;
-      font-weight:900;
-      color:#6cb7ff;
-      letter-spacing:.5px;
-    }
-
-    .brandText{
-      display:flex;
-      flex-direction:column;
-      line-height:1.05;
-    }
-
-    .brandText strong{
-      font-size:20px;
-      font-weight:900;
-      color:var(--text);
-    }
-
-    .brandText span{
-      font-size:13px;
-      color:var(--muted2);
+      margin-bottom:26px;
+      text-align:center;
     }
 
     .heroCenter{
-      text-align:center;
+      max-width:1240px;
+      margin:0 auto;
+    }
+
+    .logosBar{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:30px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .topLogo{
+      display:block;
+      object-fit:contain;
+      filter:drop-shadow(0 10px 26px rgba(0,0,0,.28));
+    }
+
+    .aceLogo{
+      height:74px;
+      width:auto;
+    }
+
+    .biofeedLogo{
+      height:68px;
+      width:auto;
     }
 
     .kicker{
@@ -109,6 +96,7 @@
       color:var(--muted);
       font-size:13px;
       margin-bottom:12px;
+      box-shadow:0 8px 22px rgba(0,0,0,.18);
     }
 
     .hero h1{
@@ -139,17 +127,17 @@
       background:rgba(255,255,255,.04);
       color:var(--muted);
       font-size:14px;
-      box-shadow:0 8px 22px rgba(0,0,0,.22);
+      box-shadow:0 8px 22px rgba(0,0,0,.20);
     }
 
     .heroAside{
-      text-align:right;
+      text-align:center;
       font-size:18px;
       line-height:1.15;
       font-style:italic;
       color:var(--accent);
       font-weight:700;
-      padding-right:4px;
+      margin-top:12px;
     }
 
     .panel{
@@ -178,7 +166,7 @@
       letter-spacing:.2px;
     }
 
-    .sectionHead .rightInfo{
+    .rightInfo{
       color:var(--muted2);
       font-size:14px;
       white-space:nowrap;
@@ -238,6 +226,8 @@
       font-size:14px;
       font-weight:700;
       margin-bottom:16px;
+      position:relative;
+      z-index:1;
     }
 
     .card h3{
@@ -246,6 +236,8 @@
       line-height:1.1;
       font-weight:900;
       letter-spacing:.2px;
+      position:relative;
+      z-index:1;
     }
 
     .card p{
@@ -254,6 +246,8 @@
       font-size:16px;
       line-height:1.5;
       max-width:95%;
+      position:relative;
+      z-index:1;
     }
 
     .visual{
@@ -263,6 +257,8 @@
       background:
         linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
       padding:14px;
+      position:relative;
+      z-index:1;
     }
 
     .visualTop{
@@ -361,6 +357,8 @@
       border-top:1px solid rgba(255,255,255,.08);
       font-size:14px;
       color:var(--muted2);
+      position:relative;
+      z-index:1;
     }
 
     .updateBadge{
@@ -369,10 +367,19 @@
       gap:8px;
       padding:10px 14px;
       border-radius:999px;
+      font-weight:800;
+      box-shadow:0 10px 24px rgba(0,0,0,.16);
+    }
+
+    .updateBadge.is-today{
       background:#f1c40f;
       color:#071225;
-      font-weight:800;
-      box-shadow:0 10px 24px rgba(241,196,15,.18);
+    }
+
+    .updateBadge.is-old{
+      background:rgba(255,255,255,.08);
+      color:#dce7ff;
+      border:1px solid rgba(255,255,255,.10);
     }
 
     .go{
@@ -408,22 +415,14 @@
     }
 
     @media (max-width:1200px){
-      .hero{
-        grid-template-columns:1fr;
-        text-align:center;
-      }
-      .brand{
-        justify-content:center;
-      }
-      .heroAside{
-        text-align:center;
-      }
       .hero h1{
-        font-size:40px;
+        font-size:42px;
       }
+
       .cards{
         grid-template-columns:1fr 1fr;
       }
+
       .stack{
         grid-column:1 / -1;
       }
@@ -433,25 +432,43 @@
       .wrap{
         padding:18px 16px 28px;
       }
+
+      .aceLogo{height:54px;}
+      .biofeedLogo{height:48px;}
+
+      .logosBar{
+        gap:18px;
+      }
+
       .hero h1{
         font-size:32px;
       }
+
       .sectionHead{
         flex-direction:column;
         align-items:flex-start;
       }
+
+      .rightInfo{
+        white-space:normal;
+      }
+
       .cards{
         grid-template-columns:1fr;
       }
+
       .stack{
         grid-column:auto;
       }
+
       .card{
         min-height:340px;
       }
+
       .miniGrid{
         grid-template-columns:1fr;
       }
+
       .cardFooter{
         flex-direction:column;
         align-items:flex-start;
@@ -463,25 +480,25 @@
   <div class="wrap">
 
     <header class="hero">
-      <div class="brand">
-        <div class="brandMark">ACE</div>
-        <div class="brandText">
-          <strong>Biofeed</strong>
-          <span>Agri Commodity Experts</span>
-        </div>
-      </div>
-
       <div class="heroCenter">
+
+        <div class="logosBar">
+          <img src="ACE-white.png" alt="ACE" class="topLogo aceLogo">
+          <img src="biofeed.png" alt="Biofeed" class="topLogo biofeedLogo">
+        </div>
+
         <div class="kicker">Panel startowy</div>
         <h1>Controlling i Portfele - Biofeed</h1>
+
         <div class="heroSub">
-          <div class="chip">Aktualizacja serwisu: <strong class="js-today"></strong></div>
+          <div class="chip">Dzisiaj: <strong class="js-today"></strong></div>
           <div class="chip">Moduły: śruta sojowa i śruta rzepakowa</div>
         </div>
-      </div>
 
-      <div class="heroAside">
-        Panel controllingowy<br>dla Biofeed
+        <div class="heroAside">
+          Panel controllingowy dla Biofeed
+        </div>
+
       </div>
     </header>
 
@@ -493,7 +510,8 @@
 
       <div class="cards">
 
-        <a class="card" href="sruta-sojowa/">
+        <!-- Zmieniasz tylko data-report-date -->
+        <a class="card reportCard" href="sruta-sojowa/" data-report-date="2026-03-24">
           <div class="cardTag">Controlling</div>
           <h3>Śruta sojowa - controlling</h3>
           <p>Wejście do raportów controllingowych, portfela zakupowego oraz bieżących materiałów dla śruty sojowej.</p>
@@ -512,12 +530,15 @@
           </div>
 
           <div class="cardFooter">
-            <div class="updateBadge">Aktualizacja: <span class="js-today"></span></div>
+            <div class="updateBadge">
+              Aktualizacja: <span class="reportDate"></span>
+            </div>
             <div class="go">Otwórz →</div>
           </div>
         </a>
 
-        <a class="card" href="sruta-rzepakowa/">
+        <!-- Zmieniasz tylko data-report-date -->
+        <a class="card reportCard" href="sruta-rzepakowa/" data-report-date="2026-03-24">
           <div class="cardTag">Controlling</div>
           <h3>Śruta rzepakowa - controlling</h3>
           <p>Wejście do raportów controllingowych, portfela zakupowego oraz bieżących materiałów dla śruty rzepakowej.</p>
@@ -536,14 +557,17 @@
           </div>
 
           <div class="cardFooter">
-            <div class="updateBadge">Aktualizacja: <span class="js-today"></span></div>
+            <div class="updateBadge">
+              Aktualizacja: <span class="reportDate"></span>
+            </div>
             <div class="go">Otwórz →</div>
           </div>
         </a>
 
         <div class="stack">
 
-          <a class="card small" href="podsumowanie-sruta-sojowa/">
+          <!-- Zmieniasz tylko data-report-date -->
+          <a class="card small reportCard" href="podsumowanie-sruta-sojowa/" data-report-date="2026-03-24">
             <div class="cardTag">Podsumowanie</div>
             <h3>Podsumowanie śruta sojowa</h3>
             <p>Szybkie wejście do krótszych materiałów, komentarzy i zbiorczych podsumowań dla śruty sojowej.</p>
@@ -553,12 +577,15 @@
             </div>
 
             <div class="cardFooter">
-              <div class="updateBadge">Aktualizacja: <span class="js-today"></span></div>
+              <div class="updateBadge">
+                Aktualizacja: <span class="reportDate"></span>
+              </div>
               <div class="go">Otwórz →</div>
             </div>
           </a>
 
-          <a class="card small" href="podsumowanie-sruta-rzepakowa/">
+          <!-- Zmieniasz tylko data-report-date -->
+          <a class="card small reportCard" href="podsumowanie-sruta-rzepakowa/" data-report-date="2026-03-24">
             <div class="cardTag">Podsumowanie</div>
             <h3>Podsumowanie śruta rzepakowa</h3>
             <p>Szybkie wejście do krótszych materiałów, komentarzy i zbiorczych podsumowań dla śruty rzepakowej.</p>
@@ -568,7 +595,9 @@
             </div>
 
             <div class="cardFooter">
-              <div class="updateBadge">Aktualizacja: <span class="js-today"></span></div>
+              <div class="updateBadge">
+                Aktualizacja: <span class="reportDate"></span>
+              </div>
               <div class="go">Otwórz →</div>
             </div>
           </a>
@@ -590,10 +619,44 @@
       return `${d}.${m}.${y}`;
     }
 
+    function formatIsoLocal(date){
+      const d = String(date.getDate()).padStart(2, '0');
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const y = date.getFullYear();
+      return `${y}-${m}-${d}`;
+    }
+
     document.addEventListener('DOMContentLoaded', function(){
-      const today = formatDatePL(new Date());
+      const now = new Date();
+      const todayPL = formatDatePL(now);
+      const todayISO = formatIsoLocal(now);
+
       document.querySelectorAll('.js-today').forEach(el => {
-        el.textContent = today;
+        el.textContent = todayPL;
+      });
+
+      document.querySelectorAll('.reportCard').forEach(card => {
+        const reportDate = card.dataset.reportDate;
+        const badge = card.querySelector('.updateBadge');
+        const dateSpan = card.querySelector('.reportDate');
+
+        if (!reportDate || !badge || !dateSpan) return;
+
+        const parts = reportDate.split('-');
+        if (parts.length !== 3) {
+          dateSpan.textContent = reportDate;
+          badge.classList.add('is-old');
+          return;
+        }
+
+        const formattedPL = `${parts[2]}.${parts[1]}.${parts[0]}`;
+        dateSpan.textContent = formattedPL;
+
+        if (reportDate === todayISO) {
+          badge.classList.add('is-today');
+        } else {
+          badge.classList.add('is-old');
+        }
       });
     });
   </script>
