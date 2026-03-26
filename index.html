@@ -13,15 +13,11 @@
     :root{
       --bg:#061223;
       --panel:#0b1b36;
-      --panel2:#102347;
       --text:#f2f6ff;
       --muted:rgba(242,246,255,.78);
       --muted2:rgba(242,246,255,.56);
       --line:rgba(125,211,252,.24);
-      --lineSoft:rgba(255,255,255,.09);
       --accent:#f1c40f;
-      --accent2:#7dd3fc;
-      --accent3:#a78bfa;
       --shadow:0 18px 42px rgba(0,0,0,.34);
       --ok:#f1c40f;
       --oldBg:rgba(255,255,255,.08);
@@ -516,7 +512,7 @@
             </div>
           </a>
 
-          <a class="card small reportCard" href="sbm-podsumowanie/index.html" data-source="sbm-podsumowanie/index.html">
+          <a class="card small reportCard" href="podsumowanie-sbm/index.html" data-source="podsumowanie-sbm/index.html">
             <div class="cardInner">
               <div class="content">
                 <div class="metaTop">
@@ -584,7 +580,7 @@
             </div>
           </a>
 
-          <a class="card small reportCard" href="rsm-podsumowanie/index.html" data-source="rsm-podsumowanie/index.html">
+          <a class="card small reportCard" href="podsumowanie-rsm/index.html" data-source="podsumowanie-rsm/index.html">
             <div class="cardInner">
               <div class="content">
                 <div class="metaTop">
@@ -625,10 +621,6 @@
   </div>
 
   <script>
-    function formatDatePL(day, month, year){
-      return `${String(day).padStart(2, '0')}.${String(month).padStart(2, '0')}.${year}`;
-    }
-
     function todayIsoLocal(){
       const now = new Date();
       const y = now.getFullYear();
@@ -641,21 +633,16 @@
       if (!raw) return null;
 
       const value = String(raw).trim().replace(/\s+/g, ' ');
-
       let m;
 
       m = value.match(/^(\d{4})[.\-\/](\d{2})[.\-\/](\d{2})$/);
       if (m) {
-        const iso = `${m[1]}-${m[2]}-${m[3]}`;
-        const pl = `${m[3]}.${m[2]}.${m[1]}`;
-        return { iso, pl };
+        return { iso: `${m[1]}-${m[2]}-${m[3]}`, pl: `${m[3]}.${m[2]}.${m[1]}` };
       }
 
       m = value.match(/^(\d{2})[.\-\/](\d{2})[.\-\/](\d{4})$/);
       if (m) {
-        const iso = `${m[3]}-${m[2]}-${m[1]}`;
-        const pl = `${m[1]}.${m[2]}.${m[3]}`;
-        return { iso, pl };
+        return { iso: `${m[3]}-${m[2]}-${m[1]}`, pl: `${m[1]}.${m[2]}.${m[3]}` };
       }
 
       return null;
