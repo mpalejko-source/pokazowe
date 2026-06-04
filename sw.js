@@ -1,9 +1,9 @@
-const CACHE_NAME = 'ace-agro-v3';
+const CACHE_NAME = 'ace-agro-v4';
 const urlsToCache = [
   './',
   './index.html',
   './manifest.json',
-  './logo.png'
+  './ikonka.png'
 ];
 
 self.addEventListener('install', event => {
