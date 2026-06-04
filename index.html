@@ -16,7 +16,7 @@
         :root { --ace-navy: #203764; --ace-red: #C00000; --ace-green: #375623; --ace-bg: #f4f7f6; --ace-light: #ffffff; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--ace-bg); color: #333; margin: 0; padding: 0; }
         
-        #installBanner { background-color: var(--ace-red); color: white; text-align: center; padding: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; display: block; }
+        #installBanner { background-color: var(--ace-red); color: white; text-align: center; padding: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; display: none; }
         #installBanner:active { background-color: #900000; }
 
         .hero-banner { position: relative; height: 220px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: white; text-shadow: 2px 2px 8px rgba(0,0,0,0.8); }
@@ -46,45 +46,83 @@
         .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; }
         .checkbox-group label { display: flex; align-items: center; gap: 5px; background: #f8f9fa; padding: 6px 10px; border-radius: 20px; border: 1px solid #ccc; font-size: 0.9rem; }
 
-        .table-responsive { overflow-x: auto; margin-bottom: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); -webkit-overflow-scrolling: touch; }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        .table-responsive { margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #ddd; padding: 10px 8px; text-align: center; font-size: 0.9rem; }
         th { background-color: var(--ace-navy); color: white; font-weight: bold; }
-        th.row-header { background-color: var(--ace-navy); position: sticky; left: 0; z-index: 1; box-shadow: 2px 0 5px rgba(0,0,0,0.2); }
+        th.row-header { background-color: var(--ace-navy); position: sticky; left: 0; z-index: 1; }
 
         .charts-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
         .chart-container { position: relative; height: 350px; background: white; padding: 10px; border-radius: 8px; border: 1px solid #eee; }
 
-        /* MAGIA DLA TELEFONÓW (MOBILE RWD) */
+        /* ======================================================== */
+        /* MAGIA PIONOWYCH KART DLA TELEFONÓW (MOBILE RWD)          */
+        /* ======================================================== */
         @media (max-width: 768px) {
             .hero-banner { height: 160px; }
             .hero-content h1 { font-size: 1.5rem; }
             .container { margin-top: -10px; padding: 10px; }
             .charts-wrapper { grid-template-columns: 1fr; }
             
-            /* Tabela Dashboardu na mobile zmienia się w karty! */
-            #dashTable, #dashTable tbody, #dashTable tr, #dashTable td { display: block; width: 100%; }
-            #dashTable thead { display: none; /* Ukrywamy nagłówki na mobile */ }
-            #dashTable tr { margin-bottom: 15px; border: 2px solid var(--ace-navy); border-radius: 8px; overflow: hidden; background: white;}
-            #dashTable td { 
-                display: flex; justify-content: space-between; align-items: center; 
-                text-align: right; border: none; border-bottom: 1px solid #eee; padding: 12px; 
+            /* Ukrywamy klasyczne nagłówki */
+            #dashTable thead, #profitTable thead { display: none; }
+            
+            /* Zmieniamy komórki i wiersze w bloki wyświetlane jeden pod drugim */
+            #dashTable, #dashTable tbody, #dashTable tr, #dashTable td, #dashTable th,
+            #profitTable, #profitTable tbody, #profitTable tr, #profitTable td, #profitTable th {
+                display: block; width: 100%; box-sizing: border-box;
             }
-            #dashTable td:last-child { border-bottom: none; }
-            #dashTable td::before { 
-                content: attr(data-label); /* Zaciąga nazwę z atrybutu HTML */
-                font-weight: bold; color: var(--ace-navy); text-align: left; padding-right: 10px;
+
+            /* Pojedyncza Karta (Wiersz Tabeli) */
+            #dashTable tr, #profitTable tr {
+                margin-bottom: 20px;
+                border: 2px solid var(--ace-navy);
+                border-radius: 8px;
+                background: white;
+                overflow: hidden;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             }
-            #dashTable th.row-header {
-                display: block; width: 100%; background: var(--ace-navy); color: white; 
-                text-align: center; font-size: 1.2rem; padding: 10px; position: static; box-sizing: border-box;
+
+            /* Nagłówek Karty */
+            #dashTable th.row-header, #profitTable th.row-header {
+                background: var(--ace-navy);
+                color: white;
+                text-align: center;
+                padding: 12px;
+                font-size: 1.1rem;
+                position: static;
+                border: none;
             }
+
+            /* Komórki danych wewnątrz Karty */
+            #dashTable td, #profitTable td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: right;
+                border: none;
+                border-bottom: 1px solid #eee;
+                padding: 12px 15px;
+            }
+            #dashTable td:last-child, #profitTable td:last-child { border-bottom: none; }
+
+            /* Etykiety pobierane z atrybutu 'data-label' wstawione przed danymi */
+            #dashTable td::before, #profitTable td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                color: var(--ace-navy);
+                text-align: left;
+                padding-right: 15px;
+                flex: 1;
+            }
+            
+            .dash-input { width: 100px !important; text-align: right; }
         }
     </style>
 </head>
 <body>
 
-<div id="installBanner" onclick="installApp()">📲 Zainstaluj aplikację ACE Agro na telefonie (Kliknij)</div>
+<div id="installBanner" onclick="installApp()">📲 Zainstaluj aplikację ACE Agro na telefonie</div>
 
 <div class="hero-banner" id="heroBanner">
     <div class="hero-overlay"></div>
@@ -107,22 +145,22 @@
     <!-- DASHBOARD -->
     <div id="dashboardView" style="display: block;">
         <h3 style="color: var(--ace-navy);">Porównanie Opłacalności Upraw</h3>
-        <p style="color: #666; font-size: 0.9rem;">Wpisz przewidywany plon i cenę poniżej.</p>
         
-        <!-- Tabela responsywna -->
-        <table id="dashTable" style="margin-bottom: 30px;">
-            <thead>
-                <tr>
-                    <th class="row-header">Uprawa</th>
-                    <th>Plon (t/ha)</th>
-                    <th>Cena (PLN/t)</th>
-                    <th>Koszty (PLN/ha)</th>
-                    <th>Zysk/Strata (PLN/ha)</th>
-                    <th>ROI (%)</th>
-                </tr>
-            </thead>
-            <tbody id="dashTableBody"></tbody>
-        </table>
+        <div class="table-responsive">
+            <table id="dashTable">
+                <thead>
+                    <tr>
+                        <th class="row-header">Uprawa</th>
+                        <th>Plon (t/ha)</th>
+                        <th>Cena (PLN/t)</th>
+                        <th>Koszty (PLN/ha)</th>
+                        <th>Zysk/Strata (PLN/ha)</th>
+                        <th>ROI (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="dashTableBody"></tbody>
+            </table>
+        </div>
 
         <div class="charts-wrapper">
             <div class="chart-container"><canvas id="dashProfitChart"></canvas></div>
@@ -150,6 +188,7 @@
             <div class="checkbox-group" id="yieldCheckboxes"></div>
         </div>
 
+        <h3 style="color: var(--ace-navy);">Macierz Wrażliwości</h3>
         <div class="table-responsive">
             <table id="profitTable"></table>
         </div>
@@ -162,17 +201,16 @@
 </div>
 
 <script>
-    // Zabezpieczenie przed błędem wczytywania biblioteki Datalabels
     try {
         Chart.register(ChartDataLabels);
         Chart.defaults.plugins.datalabels.display = false;
-    } catch(e) { console.warn("Datalabels plugin not loaded yet"); }
+    } catch(e) {}
 
     const defaultData = {
         rzepak: { name: "Rzepak", bgImg: 'https://images.unsplash.com/photo-1590038870381-8077b960b777?auto=format&fit=crop&w=1920&q=80', defaultCost: 7875, defaultSubsidy: 502, dashYield: 3.5, dashPrice: 2100, yields: [2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0], prices: [1800, 1900, 2000, 2100, 2200, 2300, 2400] },
         pszenica: { name: "Pszenica Ozima", bgImg: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=1920&q=80', defaultCost: 7925, defaultSubsidy: 1148, dashYield: 6.5, dashPrice: 850, yields: [4.0, 5.0, 6.0, 7.0, 8.0, 9.0], prices: [600, 700, 800, 900, 1000, 1100, 1200] },
-        kukurydza: { name: "Kuku (Sucha)", bgImg: 'https://images.unsplash.com/photo-1599813589814-257a070a273b?auto=format&fit=crop&w=1920&q=80', defaultCost: 11066, defaultSubsidy: 502, dashYield: 9.0, dashPrice: 750, yields: [6.0, 8.0, 10.0, 12.0, 14.0], prices: [500, 600, 700, 800, 900, 1000] },
-        kukurydza_mokra: { name: "Kuku (Mokra)", bgImg: 'https://images.unsplash.com/photo-1621252171057-0470d091a13d?auto=format&fit=crop&w=1920&q=80', defaultCost: 8570, defaultSubsidy: 502, dashYield: 12.0, dashPrice: 480, yields: [8.0, 10.0, 12.0, 14.0, 16.0], prices: [300, 400, 500, 600, 700, 800] }
+        kukurydza: { name: "Kukurydza (Sucha)", bgImg: 'https://images.unsplash.com/photo-1599813589814-257a070a273b?auto=format&fit=crop&w=1920&q=80', defaultCost: 11066, defaultSubsidy: 502, dashYield: 9.0, dashPrice: 750, yields: [6.0, 8.0, 10.0, 12.0, 14.0], prices: [500, 600, 700, 800, 900, 1000] },
+        kukurydza_mokra: { name: "Kukurydza (Mokra)", bgImg: 'https://images.unsplash.com/photo-1621252171057-0470d091a13d?auto=format&fit=crop&w=1920&q=80', defaultCost: 8570, defaultSubsidy: 502, dashYield: 12.0, dashPrice: 480, yields: [8.0, 10.0, 12.0, 14.0, 16.0], prices: [300, 400, 500, 600, 700, 800] }
     };
 
     let cropData = JSON.parse(JSON.stringify(defaultData)); 
@@ -216,7 +254,7 @@
         }
     }
 
-    // DASHBOARD - Dodano atrybuty data-label potrzebne dla telefonów
+    // DASHBOARD Z WSTRZYKIWANIEM DATA-LABEL DO KART NA MOBILE
     function renderDashboardTable() {
         const tbody = document.getElementById('dashTableBody');
         tbody.innerHTML = '';
@@ -228,9 +266,9 @@
             <tr>
                 <th class="row-header">${data.name}</th>
                 <td data-label="Zakładany Plon:"><input type="number" class="dash-input" value="${data.dashYield}" step="0.5" onchange="updateDashData('${key}', 'dashYield', this.value)"> t/ha</td>
-                <td data-label="Zakładana Cena:"><input type="number" class="dash-input" value="${data.dashPrice}" step="10" onchange="updateDashData('${key}', 'dashPrice', this.value)"> PLN</td>
-                <td data-label="Własne Koszty:" style="color:#666;">K: ${formatPLN(data.defaultCost)}<br>D: ${formatPLN(data.defaultSubsidy)}</td>
-                <td data-label="Przewidywany Zysk:" style="font-weight: bold; background-color: ${getColor(profit)}; color: ${profit < -2500 || profit >= 3000 ? 'white' : 'black'};">${formatPLN(profit)}</td>
+                <td data-label="Zakładana Cena:"><input type="number" class="dash-input" value="${data.dashPrice}" step="10" onchange="updateDashData('${key}', 'dashPrice', this.value)"> PLN/t</td>
+                <td data-label="Własne Koszty:" style="color:#666; font-size: 0.85rem;">K: ${formatPLN(data.defaultCost)}<br>D: ${formatPLN(data.defaultSubsidy)}</td>
+                <td data-label="Zysk/Strata:" style="font-weight: bold; background-color: ${getColor(profit)}; color: ${profit < -2500 || profit >= 3000 ? 'white' : 'black'};">${formatPLN(profit)}</td>
                 <td data-label="Wskaźnik ROI:" style="font-weight: bold; color: ${roi < 0 ? 'var(--ace-red)' : 'var(--ace-green)'};">${roi.toFixed(1)}%</td>
             </tr>`;
         });
@@ -283,21 +321,27 @@
         const selectedYields = Array.from(document.querySelectorAll('.yield-cb:checked')).map(cb => parseFloat(cb.value));
         
         const table = document.getElementById('profitTable');
-        let html = `<thead><tr><th class="row-header">Plon(t)</th><th style="background:var(--ace-red);">P. 0</th>`;
+        let html = `<thead><tr><th class="row-header">Plon</th><th style="background:var(--ace-red);">Pkt 0</th>`;
         data.prices.forEach(p => { html += `<th>${p}zł</th>`; });
         html += '</tr></thead><tbody>';
 
         const chartDatasets = [], bepDataList = [], chartColors = ['#F8696B', '#F39C12', '#3498DB', '#63BE7B', '#8E44AD', '#34495E'];
+        
+        // ZAWARTOSC TABELI SZCZEGOLOWEJ Z DATA-LABEL DO KART
         data.yields.forEach((y, index) => {
             let bep = Math.max(0, (cost - subsidy) / y);
             bepDataList.push(bep);
-            html += `<tr><th class="row-header">${y.toFixed(1)}</th><td style="color:var(--ace-red); font-weight:bold;">${bep.toFixed(0)}</td>`;
+            
+            html += `<tr><th class="row-header">Dla plonu: ${y.toFixed(1)} t/ha</th>`;
+            html += `<td data-label="Punkt Opłacalności:" style="color:var(--ace-red); font-weight:bold;">${bep.toFixed(0)} PLN</td>`;
+            
             let rowData = [];
             data.prices.forEach(p => {
                 const profit = (y * p) + subsidy - cost; rowData.push(profit);
-                html += `<td style="background-color: ${getColor(profit)}; color: ${(profit < -2500 || profit >= 3000) ? 'white' : 'black'}; font-weight: bold;">${profit.toFixed(0)}</td>`;
+                html += `<td data-label="Przy cenie ${p} zł/t:" style="background-color: ${getColor(profit)}; color: ${(profit < -2500 || profit >= 3000) ? 'white' : 'black'}; font-weight: bold;">${profit.toFixed(0)} PLN</td>`;
             });
             html += '</tr>';
+            
             if (selectedYields.includes(y)) chartDatasets.push({ label: `${y.toFixed(1)}t`, data: rowData, borderColor: chartColors[index % chartColors.length], backgroundColor: chartColors[index % chartColors.length], borderWidth: 2, fill: false, tension: 0.1, pointRadius: 2 });
         });
         html += '</tbody>'; table.innerHTML = html;
@@ -334,13 +378,15 @@
     document.getElementById('costInput').addEventListener('input', updateCropApp);
     document.getElementById('subsidyInput').addEventListener('input', updateCropApp);
 
-    // INICJALIZACJA APLIKACJI
+    // INICJALIZACJA
     window.onload = () => { 
         loadSettings(); 
         switchView('dashboard'); 
     };
     
+    // ==========================================
     // PWA & INSTALACJA
+    // ==========================================
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js').catch(err => console.log('Błąd SW: ', err));
@@ -350,7 +396,6 @@
     let deferredPrompt;
     const banner = document.getElementById('installBanner');
     
-    // Android złapie ten event automatycznie
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
@@ -360,26 +405,25 @@
     function installApp() {
         const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
         if(isIos) {
-            alert("🍏 Aby zainstalować na iPhonie:\n\n1. Kliknij ikonę [Udostępnij] na dole przeglądarki (kwadrat ze strzałką)\n2. Wybierz 'Do ekranu początkowego' z listy.");
+            alert("🍏 Instalacja na Apple iOS:\n\n1. Kliknij ikonę [Udostępnij] (na dole przeglądarki Safari)\n2. Zjedź niżej i wybierz 'Do ekranu początkowego'.");
         } else if (deferredPrompt) {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then(() => {
                 deferredPrompt = null;
                 banner.style.display = 'none';
             });
-        } else {
-            alert("Aby zainstalować aplikację na Androidzie, wejdź w opcje przeglądarki (3 kropki) i kliknij 'Dodaj do ekranu głównego'.");
         }
     }
 
-    // Pokaż banner dla iOS ręcznie (bo Apple nie obsługuje beforeinstallprompt)
     const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
     const isStandalone = ('standalone' in window.navigator) && window.navigator.standalone;
+    
+    // Wymuś wyświetlanie paska instalacji na iPhone (tylko z poziomu Safari)
     if (isIos && !isStandalone) {
         banner.style.display = 'block';
     }
 
-    // Ukryj pasek po uruchomieniu zainstalowanej aplikacji
+    // Jeśli aplikacja jest już odpalona z ekranu głównego, usuń pasek
     if (window.matchMedia('(display-mode: standalone)').matches || isStandalone) {
         banner.style.display = 'none';
     }
