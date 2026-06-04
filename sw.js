@@ -1,8 +1,9 @@
-const CACHE_NAME = 'ace-kalkulator-v1';
+const CACHE_NAME = 'ace-agro-v2';
 const urlsToCache = [
   './',
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './logo.png'
 ];
 
 self.addEventListener('install', event => {
