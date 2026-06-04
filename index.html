@@ -1,769 +1,535 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Controlling i Portfele - Biofeed</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACE Group - Symulator Rentowności Upraw</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#203764">
+    <link rel="apple-touch-icon" href="logo.png">
 
-  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    
+    <style>
+        :root {
+            --ace-navy: #203764;
+            --ace-red: #C00000;
+            --ace-green: #375623;
+            --ace-bg: #f4f7f6;
+            --ace-light: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--ace-bg);
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .hero-banner {
+            position: relative;
+            height: 280px;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.5s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to right, rgba(32,55,100,0.85), rgba(192,0,0,0.5));
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .hero-logo {
+            max-height: 80px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            background-color: rgba(255,255,255,0.1);
+            padding: 5px;
+        }
+        .hero-content h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: -30px auto 40px auto;
+            background: var(--ace-light);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            position: relative;
+            z-index: 2;
+        }
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #eee;
+            padding-bottom: 10px;
+        }
+        .tab-btn {
+            background: #eee;
+            border: none;
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: bold;
+            color: #555;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .tab-btn:hover { background: #ddd; }
+        .tab-btn.active { background: var(--ace-navy); color: white; }
+        .tab-btn.dash-btn { background: #e0e0e0; border-bottom: 3px solid var(--ace-red); }
+        .tab-btn.dash-btn.active { background: var(--ace-red); color: white; border-bottom: none; }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+            background: #eef2f5;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid var(--ace-navy);
+            align-items: flex-end;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 200px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--ace-navy);
+            font-size: 0.95rem;
+        }
+        input[type="number"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-weight: bold;
+            color: #333;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .dash-input {
+            width: 100px !important;
+            padding: 6px !important;
+            text-align: center;
+        }
+        .btn-wir {
+            background: var(--ace-navy);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-wir:hover { background: #152442; }
 
-  <style>
-    :root{
-      --bg:#061223;
-      --panel:#0b1b36;
-      --text:#f2f6ff;
-      --muted:rgba(242,246,255,.78);
-      --muted2:rgba(242,246,255,.56);
-      --line:rgba(125,211,252,.24);
-      --accent:#f1c40f;
-      --shadow:0 18px 42px rgba(0,0,0,.34);
-      --ok:#f1c40f;
-      --oldBg:rgba(255,255,255,.08);
-      --oldText:#dce7ff;
-      --errBg:rgba(255,90,90,.12);
-      --errText:#ffdede;
-    }
+        .yield-selector {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .yield-selector h4 { margin: 0 0 10px 0; color: var(--ace-navy); }
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 15px; }
+        .checkbox-group label {
+            display: flex; align-items: center; gap: 5px; background: #f8f9fa;
+            padding: 6px 12px; border-radius: 20px; border: 1px solid #ccc; cursor: pointer;
+        }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px 8px; text-align: center; font-size: 0.95rem; }
+        th { background-color: var(--ace-navy); color: white; font-weight: bold; }
+        .th-accent { background-color: var(--ace-red); }
+        .th-green { background-color: var(--ace-green); }
+        th.row-header { background-color: var(--ace-navy); position: sticky; left: 0; z-index: 1; }
 
-    body{
-      margin:0;
-      font-family:Arial,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1100px 650px at 8% 0%, rgba(59,130,246,.15), transparent 55%),
-        radial-gradient(850px 550px at 100% 0%, rgba(167,139,250,.08), transparent 50%),
-        linear-gradient(180deg, #04101f 0%, #071225 36%, #08152a 100%);
-    }
-
-    .wrap{
-      max-width:1600px;
-      margin:0 auto;
-      padding:18px 22px 36px;
-    }
-
-    .hero{
-      display:grid;
-      grid-template-columns:auto 1fr auto;
-      align-items:center;
-      gap:18px;
-      margin-bottom:18px;
-      min-height:92px;
-    }
-
-    .brandLeft{
-      display:flex;
-      align-items:center;
-      gap:16px;
-    }
-
-    .topLogo{
-      display:block;
-      object-fit:contain;
-      filter:drop-shadow(0 10px 26px rgba(0,0,0,.28));
-    }
-
-    .aceLogo{
-      height:64px;
-      width:auto;
-    }
-
-    .heroTitle{
-      margin:0;
-      font-size:46px;
-      line-height:1.04;
-      font-weight:900;
-      letter-spacing:.2px;
-      text-align:center;
-      text-shadow:0 8px 30px rgba(0,0,0,.35);
-    }
-
-    .heroAside{
-      text-align:right;
-      font-size:20px;
-      line-height:1.05;
-      font-style:italic;
-      color:var(--accent);
-      font-weight:800;
-      min-width:230px;
-    }
-
-    .panel{
-      border:1px solid rgba(125,211,252,.18);
-      background:
-        linear-gradient(180deg, rgba(17,30,58,.90) 0%, rgba(9,20,40,.96) 100%);
-      border-radius:28px;
-      padding:22px;
-      box-shadow:var(--shadow);
-    }
-
-    .rows{
-      display:grid;
-      gap:18px;
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns:65fr 35fr;
-      gap:18px;
-      align-items:stretch;
-    }
-
-    .card{
-      position:relative;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      min-height:220px;
-      padding:20px 20px 18px;
-      border-radius:24px;
-      text-decoration:none;
-      color:var(--text);
-      border:1px solid var(--line);
-      background:
-        radial-gradient(560px 220px at 0% 0%, rgba(125,211,252,.11), transparent 58%),
-        linear-gradient(180deg, rgba(80,108,156,.24) 0%, rgba(17,31,57,.94) 54%, rgba(11,21,41,.98) 100%);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-    }
-
-    .card:hover{
-      transform:translateY(-4px);
-      box-shadow:0 24px 50px rgba(0,0,0,.42);
-      border-color:rgba(125,211,252,.48);
-    }
-
-    .card::after{
-      content:"";
-      position:absolute;
-      right:-70px;
-      bottom:-70px;
-      width:220px;
-      height:220px;
-      border-radius:50%;
-      background:radial-gradient(circle, rgba(125,211,252,.12), transparent 68%);
-      pointer-events:none;
-    }
-
-    .cardInner{
-      display:grid;
-      grid-template-columns:minmax(0,1.2fr) minmax(180px,.8fr);
-      gap:18px;
-      align-items:center;
-      position:relative;
-      z-index:1;
-    }
-
-    .small .cardInner{
-      grid-template-columns:minmax(0,1fr) 150px;
-      gap:14px;
-    }
-
-    .metaTop{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin-bottom:12px;
-      flex-wrap:wrap;
-    }
-
-    .cardTag{
-      display:inline-flex;
-      align-items:center;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(125,211,252,.45);
-      background:rgba(125,211,252,.12);
-      color:#dff4ff;
-      font-size:13px;
-      font-weight:800;
-      letter-spacing:.2px;
-    }
-
-    .marketPill{
-      display:inline-flex;
-      align-items:center;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      color:var(--muted2);
-      font-size:12px;
-      font-weight:700;
-    }
-
-    .card h3{
-      margin:0 0 10px;
-      font-size:24px;
-      line-height:1.08;
-      font-weight:900;
-      letter-spacing:.1px;
-    }
-
-    .small h3{
-      font-size:20px;
-    }
-
-    .card p{
-      margin:0;
-      color:var(--muted);
-      font-size:15px;
-      line-height:1.5;
-      max-width:96%;
-    }
-
-    .visual{
-      height:132px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.08);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      padding:14px;
-      overflow:hidden;
-      position:relative;
-    }
-
-    .small .visual{
-      height:118px;
-    }
-
-    .vizHeader{
-      display:flex;
-      gap:8px;
-      margin-bottom:12px;
-    }
-
-    .dot{
-      width:9px;
-      height:9px;
-      border-radius:50%;
-      background:rgba(255,255,255,.30);
-    }
-
-    .tableLines{
-      display:grid;
-      gap:8px;
-    }
-
-    .line{
-      height:18px;
-      border-radius:8px;
-      position:relative;
-      overflow:hidden;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.05);
-    }
-
-    .line::before{
-      content:"";
-      position:absolute;
-      inset:0 auto 0 0;
-      border-radius:8px;
-      background:linear-gradient(90deg, rgba(125,211,252,.55), rgba(167,139,250,.45));
-    }
-
-    .line.l1::before{ width:72%; }
-    .line.l2::before{ width:56%; }
-    .line.l3::before{ width:83%; }
-    .line.l4::before{ width:44%; }
-
-    .spark{
-      position:absolute;
-      left:14px;
-      right:14px;
-      bottom:14px;
-      height:38px;
-      border-radius:12px;
-      background:
-        linear-gradient(90deg,
-          rgba(125,211,252,.40) 0 16%,
-          transparent 16% 21%,
-          rgba(241,196,15,.34) 21% 37%,
-          transparent 37% 42%,
-          rgba(167,139,250,.34) 42% 62%,
-          transparent 62% 67%,
-          rgba(125,211,252,.38) 67% 85%,
-          transparent 85% 100%);
-    }
-
-    .curve{
-      position:absolute;
-      left:12px;
-      right:12px;
-      top:42px;
-      height:38px;
-      opacity:.95;
-      background-repeat:no-repeat;
-      background-size:100% 100%;
-      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 60' preserveAspectRatio='none'><path d='M0 45 C20 40, 35 22, 60 28 S110 58, 140 42 S190 18, 225 24 S270 42, 300 20' fill='none' stroke='rgba(125,211,252,0.95)' stroke-width='4' stroke-linecap='round'/></svg>");
-    }
-
-    .miniBars{
-      position:absolute;
-      left:14px;
-      right:14px;
-      bottom:14px;
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:8px;
-      align-items:end;
-      height:44px;
-    }
-
-    .miniBars span{
-      display:block;
-      border-radius:8px 8px 4px 4px;
-      background:linear-gradient(180deg, rgba(125,211,252,.65), rgba(167,139,250,.30));
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .miniBars span:nth-child(1){ height:28px; }
-    .miniBars span:nth-child(2){ height:40px; }
-    .miniBars span:nth-child(3){ height:22px; }
-    .miniBars span:nth-child(4){ height:34px; }
-    .miniBars span:nth-child(5){ height:18px; }
-
-    .cardFooter{
-      margin-top:16px;
-      padding-top:14px;
-      border-top:1px solid rgba(255,255,255,.08);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      position:relative;
-      z-index:1;
-    }
-
-    .updateBadge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 14px;
-      border-radius:999px;
-      font-size:14px;
-      font-weight:800;
-      box-shadow:0 10px 24px rgba(0,0,0,.16);
-      white-space:nowrap;
-    }
-
-    .updateBadge.is-loading{
-      background:rgba(255,255,255,.08);
-      color:#dce7ff;
-      border:1px solid rgba(255,255,255,.10);
-    }
-
-    .updateBadge.is-today{
-      background:var(--ok);
-      color:#071225;
-    }
-
-    .updateBadge.is-old{
-      background:var(--oldBg);
-      color:var(--oldText);
-      border:1px solid rgba(255,255,255,.10);
-    }
-
-    .updateBadge.is-error{
-      background:var(--errBg);
-      color:var(--errText);
-      border:1px solid rgba(255,120,120,.18);
-    }
-
-    .go{
-      font-weight:800;
-      color:#dceeff;
-      font-size:14px;
-      white-space:nowrap;
-    }
-
-    .footerNote{
-      margin-top:18px;
-      color:var(--muted2);
-      font-size:13px;
-      text-align:center;
-    }
-
-    @media (max-width:1280px){
-      .heroTitle{font-size:40px;}
-    }
-
-    @media (max-width:1100px){
-      .hero{
-        grid-template-columns:1fr;
-        text-align:center;
-      }
-
-      .brandLeft{
-        justify-content:center;
-      }
-
-      .heroAside{
-        text-align:center;
-        min-width:auto;
-      }
-
-      .row{
-        grid-template-columns:1fr;
-      }
-
-      .cardInner,
-      .small .cardInner{
-        grid-template-columns:1fr;
-      }
-
-      .visual{
-        max-width:100%;
-      }
-    }
-
-    @media (max-width:760px){
-      .wrap{
-        padding:14px 14px 24px;
-      }
-
-      .aceLogo{
-        height:52px;
-      }
-
-      .heroTitle{
-        font-size:30px;
-      }
-
-      .heroAside{
-        font-size:17px;
-      }
-
-      .card{
-        min-height:unset;
-        padding:18px 16px 16px;
-      }
-
-      .card h3{
-        font-size:21px;
-      }
-
-      .small h3{
-        font-size:18px;
-      }
-
-      .cardFooter{
-        flex-direction:column;
-        align-items:flex-start;
-      }
-    }
-  </style>
+        .charts-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        @media (max-width: 900px) {
+            .charts-wrapper { grid-template-columns: 1fr; }
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+    </style>
 </head>
 <body>
-  <div class="wrap">
 
-    <header class="hero">
-      <div class="brandLeft">
-        <img src="ACE-white.png" alt="ACE" class="topLogo aceLogo">
-      </div>
+<div class="hero-banner" id="heroBanner" style="background-image: url('https://images.unsplash.com/photo-1590038870381-8077b960b777?auto=format&fit=crop&w=1920&q=80');">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <img src="logo.png" alt="ACE Group Logo" class="hero-logo" onerror="this.style.display='none'">
+        <h1>ACE Group</h1>
+        <p id="heroSubtext">Zaawansowany Kalkulator Rentowności i Punktu Zero</p>
+    </div>
+</div>
 
-      <h1 class="heroTitle">Controlling i Portfele - Biofeed</h1>
-
-      <div class="heroAside">
-        Panel controllingowy<br>dla Biofeed
-      </div>
-    </header>
-
-    <main class="panel">
-      <div class="rows">
-
-        <div class="row">
-          <a class="card reportCard" href="sbm/index.html" data-source="sbm/index.html">
-            <div class="cardInner">
-              <div class="content">
-                <div class="metaTop">
-                  <span class="cardTag">Controlling</span>
-                  <span class="marketPill">Śruta sojowa</span>
-                </div>
-                <h3>Śruta sojowa - controlling</h3>
-                <p>Raport controllingowy, portfel zakupowy oraz bieżące materiały dla śruty sojowej w jednym miejscu.</p>
-              </div>
-
-              <div class="visual" aria-hidden="true">
-                <div class="vizHeader">
-                  <span class="dot"></span>
-                  <span class="dot"></span>
-                  <span class="dot"></span>
-                </div>
-                <div class="tableLines">
-                  <div class="line l1"></div>
-                  <div class="line l2"></div>
-                  <div class="line l3"></div>
-                  <div class="line l4"></div>
-                </div>
-                <div class="spark"></div>
-              </div>
-            </div>
-
-            <div class="cardFooter">
-              <div class="updateBadge is-loading">
-                Aktualizacja: <span class="reportDate">ładowanie...</span>
-              </div>
-              <div class="go">Otwórz →</div>
-            </div>
-          </a>
-
-          <a class="card small reportCard" href="podsumowanie-sbm/index.html" data-source="podsumowanie-sbm/index.html">
-            <div class="cardInner">
-              <div class="content">
-                <div class="metaTop">
-                  <span class="cardTag">Podsumowanie</span>
-                </div>
-                <h3>Podsumowanie śruta sojowa</h3>
-                <p>Krótsze materiały, komentarze i zbiorczy przegląd najważniejszych informacji.</p>
-              </div>
-
-              <div class="visual" aria-hidden="true">
-                <div class="vizHeader">
-                  <span class="dot"></span>
-                  <span class="dot"></span>
-                  <span class="dot"></span>
-                </div>
-                <div class="curve"></div>
-                <div class="miniBars">
-                  <span></span><span></span><span></span><span></span><span></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="cardFooter">
-              <div class="updateBadge is-loading">
-                Aktualizacja: <span class="reportDate">ładowanie...</span>
-              </div>
-              <div class="go">Otwórz →</div>
-            </div>
-          </a>
+<div class="container">
+    <div class="tabs">
+        <button class="tab-btn dash-btn active" onclick="switchView('dashboard')">📊 Porównanie (Dashboard)</button>
+        <button class="tab-btn" onclick="switchView('rzepak')">🌼 Rzepak</button>
+        <button class="tab-btn" onclick="switchView('pszenica')">🌾 Pszenica</button>
+        <button class="tab-btn" onclick="switchView('kukurydza')">🌽 Kuku (Sucha)</button>
+        <button class="tab-btn" onclick="switchView('kukurydza_mokra')">🌧️ Kuku (Mokra)</button>
+    </div>
+    
+    <div id="dashboardView" style="display: block;">
+        <h3 style="color: var(--ace-navy);">Symulator Decyzji Zasiewowych</h3>
+        <p style="color: #666; margin-bottom: 20px;">Wpisz poniżej oczekiwany plon oraz cenę, aby porównać opłacalność wszystkich upraw. Koszty zaciągane są automatycznie z danych WIR.</p>
+        
+        <div class="table-responsive">
+            <table id="dashTable">
+                <thead>
+                    <tr>
+                        <th>Uprawa</th>
+                        <th>Zakładany Plon (t/ha)</th>
+                        <th>Zakładana Cena (PLN/t)</th>
+                        <th>Koszt + Dopłaty</th>
+                        <th class="th-green">Zysk / Strata (PLN/ha)</th>
+                        <th class="th-accent">ROI (Zwrot %)</th>
+                    </tr>
+                </thead>
+                <tbody id="dashTableBody">
+                    </tbody>
+            </table>
         </div>
 
-        <div class="row">
-          <a class="card reportCard" href="rsm/index.html" data-source="rsm/index.html">
-            <div class="cardInner">
-              <div class="content">
-                <div class="metaTop">
-                  <span class="cardTag">Controlling</span>
-                  <span class="marketPill">Śruta rzepakowa</span>
-                </div>
-                <h3>Śruta rzepakowa - controlling</h3>
-                <p>Raport controllingowy, portfel zakupowy oraz bieżące materiały dla śruty rzepakowej w jednym miejscu.</p>
-              </div>
+        <div class="charts-wrapper">
+            <div class="chart-container"><canvas id="dashProfitChart"></canvas></div>
+            <div class="chart-container"><canvas id="dashRoiChart"></canvas></div>
+        </div>
+    </div>
 
-              <div class="visual" aria-hidden="true">
-                <div class="vizHeader">
-                  <span class="dot"></span>
-                  <span class="dot"></span>
-                  <span class="dot"></span>
-                </div>
-                <div class="tableLines">
-                  <div class="line l2"></div>
-                  <div class="line l3"></div>
-                  <div class="line l1"></div>
-                  <div class="line l4"></div>
-                </div>
-                <div class="spark"></div>
-              </div>
+    <div id="cropView" style="display: none;">
+        <div class="controls">
+            <div class="control-group">
+                <label for="costInput">Koszty Całkowite (PLN/ha):</label>
+                <input type="number" id="costInput" step="50">
             </div>
-
-            <div class="cardFooter">
-              <div class="updateBadge is-loading">
-                Aktualizacja: <span class="reportDate">ładowanie...</span>
-              </div>
-              <div class="go">Otwórz →</div>
+            <div class="control-group">
+                <label for="subsidyInput">Dopłaty i Ekoschematy (PLN/ha):</label>
+                <input type="number" id="subsidyInput" step="10">
             </div>
-          </a>
-
-          <a class="card small reportCard" href="podsumowanie-rsm/index.html" data-source="podsumowanie-rsm/index.html">
-            <div class="cardInner">
-              <div class="content">
-                <div class="metaTop">
-                  <span class="cardTag">Podsumowanie</span>
-                </div>
-                <h3>Podsumowanie śruta rzepakowa</h3>
-                <p>Krótsze materiały, komentarze i zbiorczy przegląd najważniejszych informacji.</p>
-              </div>
-
-              <div class="visual" aria-hidden="true">
-                <div class="vizHeader">
-                  <span class="dot"></span>
-                  <span class="dot"></span>
-                  <span class="dot"></span>
-                </div>
-                <div class="curve"></div>
-                <div class="miniBars">
-                  <span></span><span></span><span></span><span></span><span></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="cardFooter">
-              <div class="updateBadge is-loading">
-                Aktualizacja: <span class="reportDate">ładowanie...</span>
-              </div>
-              <div class="go">Otwórz →</div>
-            </div>
-          </a>
+            <button class="btn-wir" onclick="loadWIR()">Zresetuj do danych WIR</button>
         </div>
 
-      </div>
+        <div class="yield-selector">
+            <h4>Wybierz plony do narysowania na wykresie rentowności:</h4>
+            <div class="checkbox-group" id="yieldCheckboxes"></div>
+        </div>
 
-      <div class="footerNote">
-        Daty aktualizacji są pobierane automatycznie z plików index.html w podfolderach raportów.
-      </div>
-    </main>
-  </div>
+        <h3 style="color: var(--ace-navy);">Macierz Wrażliwości i Punkt Zerowy</h3>
+        <div class="table-responsive">
+            <table id="profitTable"></table>
+        </div>
 
-  <script>
-    function todayIsoLocal(){
-      const now = new Date();
-      const y = now.getFullYear();
-      const m = String(now.getMonth() + 1).padStart(2, '0');
-      const d = String(now.getDate()).padStart(2, '0');
-      return `${y}-${m}-${d}`;
-    }
+        <div class="charts-wrapper">
+            <div class="chart-container"><canvas id="profitChart"></canvas></div>
+            <div class="chart-container"><canvas id="bepChart"></canvas></div>
+        </div>
+    </div>
+</div>
 
-    function normalizeDate(raw){
-      if (!raw) return null;
+<script>
+    Chart.register(ChartDataLabels);
+    Chart.defaults.plugins.datalabels.display = false;
 
-      const value = String(raw).trim().replace(/\s+/g, ' ');
-      let m;
-
-      m = value.match(/^(\d{4})[.\-\/](\d{2})[.\-\/](\d{2})$/);
-      if (m) {
-        return { iso: `${m[1]}-${m[2]}-${m[3]}`, pl: `${m[3]}.${m[2]}.${m[1]}` };
-      }
-
-      m = value.match(/^(\d{2})[.\-\/](\d{2})[.\-\/](\d{4})$/);
-      if (m) {
-        return { iso: `${m[3]}-${m[2]}-${m[1]}`, pl: `${m[1]}.${m[2]}.${m[3]}` };
-      }
-
-      return null;
-    }
-
-    function extractDateFromHtml(htmlText){
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlText, 'text/html');
-
-      const directCandidates = [];
-
-      const metaSelectors = [
-        'meta[name="report-updated"]',
-        'meta[name="updated"]',
-        'meta[name="last-updated"]',
-        'meta[property="report-updated"]'
-      ];
-
-      metaSelectors.forEach(selector => {
-        const el = doc.querySelector(selector);
-        if (el && el.content) directCandidates.push(el.content);
-      });
-
-      const dataSelectors = [
-        '[data-report-updated]',
-        '[data-updated]',
-        '.reportDate',
-        '.updateDate',
-        '.updated',
-        '.aktualizacja'
-      ];
-
-      dataSelectors.forEach(selector => {
-        const el = doc.querySelector(selector);
-        if (!el) return;
-
-        const attrDate = el.getAttribute('data-report-updated') || el.getAttribute('data-updated');
-        if (attrDate) directCandidates.push(attrDate);
-        if (el.textContent) directCandidates.push(el.textContent.trim());
-      });
-
-      for (const candidate of directCandidates) {
-        const parsed = normalizeDate(candidate);
-        if (parsed) return parsed;
-      }
-
-      const bodyText = (doc.body ? doc.body.textContent : htmlText)
-        .replace(/\u00A0/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-
-      const patterns = [
-        /Aktualizacja\s*:?\s*(\d{2}[.\-\/]\d{2}[.\-\/]\d{4})/i,
-        /Aktualizacja\s*:?\s*(\d{4}[.\-\/]\d{2}[.\-\/]\d{2})/i,
-        /Updated\s*:?\s*(\d{2}[.\-\/]\d{2}[.\-\/]\d{4})/i,
-        /Updated\s*:?\s*(\d{4}[.\-\/]\d{2}[.\-\/]\d{2})/i
-      ];
-
-      for (const pattern of patterns) {
-        const match = bodyText.match(pattern);
-        if (match && match[1]) {
-          const parsed = normalizeDate(match[1]);
-          if (parsed) return parsed;
+    const cropData = {
+        rzepak: {
+            name: "Rzepak",
+            bgImg: 'https://images.unsplash.com/photo-1590038870381-8077b960b777?auto=format&fit=crop&w=1920&q=80',
+            defaultCost: 7875, defaultSubsidy: 502,
+            dashYield: 3.5, dashPrice: 2100,
+            yields: [2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0],
+            prices: [1800, 1900, 2000, 2100, 2200, 2300, 2400]
+        },
+        pszenica: {
+            name: "Pszenica Ozima",
+            bgImg: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=1920&q=80',
+            defaultCost: 7925, defaultSubsidy: 1148,
+            dashYield: 6.5, dashPrice: 850,
+            yields: [4.0, 5.0, 6.0, 7.0, 8.0, 9.0],
+            prices: [600, 700, 800, 900, 1000, 1100, 1200]
+        },
+        kukurydza: {
+            name: "Kukurydza (Sucha)",
+            bgImg: 'https://images.unsplash.com/photo-1599813589814-257a070a273b?auto=format&fit=crop&w=1920&q=80',
+            defaultCost: 11066, defaultSubsidy: 502,
+            dashYield: 9.0, dashPrice: 750,
+            yields: [6.0, 8.0, 10.0, 12.0, 14.0],
+            prices: [500, 600, 700, 800, 900, 1000]
+        },
+        kukurydza_mokra: {
+            name: "Kukurydza (Mokra)",
+            bgImg: 'https://images.unsplash.com/photo-1621252171057-0470d091a13d?auto=format&fit=crop&w=1920&q=80',
+            defaultCost: 8570, defaultSubsidy: 502,
+            dashYield: 12.0, dashPrice: 480,
+            yields: [8.0, 10.0, 12.0, 14.0, 16.0],
+            prices: [300, 400, 500, 600, 700, 800]
         }
-      }
+    };
 
-      const genericMatch = bodyText.match(/(\d{2}[.\-\/]\d{2}[.\-\/]\d{4}|\d{4}[.\-\/]\d{2}[.\-\/]\d{2})/);
-      if (genericMatch && genericMatch[1]) {
-        const parsed = normalizeDate(genericMatch[1]);
-        if (parsed) return parsed;
-      }
+    let currentCrop = 'dashboard';
+    let profitChart = null, bepChart = null, dashProfitChart = null, dashRoiChart = null;
 
-      return null;
+    function formatPLN(value) { return new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN', maximumFractionDigits: 0 }).format(value); }
+
+    function getColor(value) {
+        if (value < -2500) return '#F8696B'; 
+        if (value < 0) return '#FA9A9C';    
+        if (value >= 0 && value < 1500) return '#FFEB84'; 
+        if (value >= 1500 && value < 3000) return '#A1D99B'; 
+        return '#63BE7B'; 
     }
 
-    async function loadCardDate(card, todayISO){
-      const source = card.dataset.source;
-      const badge = card.querySelector('.updateBadge');
-      const dateSpan = card.querySelector('.reportDate');
+    // --- DASHBOARD LOGIC ---
+    function renderDashboardTable() {
+        const tbody = document.getElementById('dashTableBody');
+        tbody.innerHTML = '';
+        Object.keys(cropData).forEach(key => {
+            const data = cropData[key];
+            let profit = (data.dashYield * data.dashPrice) + data.defaultSubsidy - data.defaultCost;
+            let roi = (profit / data.defaultCost) * 100;
+            
+            tbody.innerHTML += `
+                <tr>
+                    <th style="background-color: var(--ace-navy); color: white; text-align: left; padding-left: 15px;">${data.name}</th>
+                    <td><input type="number" class="dash-input" value="${data.dashYield}" step="0.5" onchange="updateDashData('${key}', 'dashYield', this.value)"></td>
+                    <td><input type="number" class="dash-input" value="${data.dashPrice}" step="10" onchange="updateDashData('${key}', 'dashPrice', this.value)"></td>
+                    <td style="color:#666; font-size: 0.85rem;">Koszt: ${formatPLN(data.defaultCost)}<br>Dopłaty: ${formatPLN(data.defaultSubsidy)}</td>
+                    <td style="font-weight: bold; background-color: ${getColor(profit)}; color: ${profit < -2500 || profit >= 3000 ? 'white' : 'black'};">${formatPLN(profit)}</td>
+                    <td style="font-weight: bold; color: ${roi < 0 ? 'var(--ace-red)' : 'var(--ace-green)'};">${roi.toFixed(1)}%</td>
+                </tr>
+            `;
+        });
+        updateDashboardCharts();
+    }
 
-      if (!source || !badge || !dateSpan) return;
+    function updateDashData(key, field, value) {
+        cropData[key][field] = parseFloat(value) || 0;
+        renderDashboardTable();
+    }
 
-      try {
-        const separator = source.includes('?') ? '&' : '?';
-        const response = await fetch(`${source}${separator}v=${Date.now()}`, {
-          cache: 'no-store'
+    function updateDashboardCharts() {
+        const labels = [], profits = [], rois = [], profitColors = [], roiColors = [];
+        Object.keys(cropData).forEach(key => {
+            const data = cropData[key];
+            let profit = (data.dashYield * data.dashPrice) + data.defaultSubsidy - data.defaultCost;
+            let roi = (profit / data.defaultCost) * 100;
+            
+            labels.push(data.name);
+            profits.push(profit);
+            rois.push(roi);
+            profitColors.push(profit >= 0 ? '#375623' : '#C00000');
+            roiColors.push(roi >= 0 ? '#203764' : '#C00000');
         });
 
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const ctxP = document.getElementById('dashProfitChart').getContext('2d');
+        if (dashProfitChart) dashProfitChart.destroy();
+        dashProfitChart = new Chart(ctxP, {
+            type: 'bar',
+            data: { labels: labels, datasets: [{ label: 'Zysk (PLN/ha)', data: profits, backgroundColor: profitColors }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Oczekiwany Zysk (PLN/ha)', font: {size:16} }, datalabels: { display: true, color: 'white', font: {weight: 'bold'}, formatter: (v) => formatPLN(v) } } }
+        });
 
-        const htmlText = await response.text();
-        const parsed = extractDateFromHtml(htmlText);
-
-        badge.classList.remove('is-loading');
-
-        if (!parsed) {
-          badge.classList.add('is-error');
-          dateSpan.textContent = 'brak daty';
-          return;
-        }
-
-        dateSpan.textContent = parsed.pl;
-
-        if (parsed.iso === todayISO) {
-          badge.classList.add('is-today');
-        } else {
-          badge.classList.add('is-old');
-        }
-
-      } catch (err) {
-        badge.classList.remove('is-loading');
-        badge.classList.add('is-error');
-        dateSpan.textContent = 'brak odczytu';
-      }
+        const ctxR = document.getElementById('dashRoiChart').getContext('2d');
+        if (dashRoiChart) dashRoiChart.destroy();
+        dashRoiChart = new Chart(ctxR, {
+            type: 'bar',
+            data: { labels: labels, datasets: [{ label: 'ROI (%)', data: rois, backgroundColor: roiColors }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Zwrot z Kapitału (ROI %)', font: {size:16} }, datalabels: { display: true, color: 'white', font: {weight: 'bold'}, formatter: (v) => v.toFixed(1) + '%' } } }
+        });
     }
 
-    document.addEventListener('DOMContentLoaded', async function(){
-      const todayISO = todayIsoLocal();
-      const cards = [...document.querySelectorAll('.reportCard')];
-      await Promise.all(cards.map(card => loadCardDate(card, todayISO)));
-    });
-  </script>
+    // --- INDIVIDUAL CROP LOGIC ---
+    function loadWIR() {
+        const data = cropData[currentCrop];
+        document.getElementById('costInput').value = data.defaultCost;
+        document.getElementById('subsidyInput').value = data.defaultSubsidy;
+        updateCropApp();
+    }
+
+    function renderCheckboxes() {
+        const data = cropData[currentCrop];
+        const container = document.getElementById('yieldCheckboxes');
+        container.innerHTML = '';
+        data.yields.forEach((y, i) => {
+            const isChecked = (i === 0 || i === Math.floor(data.yields.length/2) || i === data.yields.length-1);
+            container.innerHTML += `<label><input type="checkbox" class="yield-cb" value="${y}" ${isChecked ? 'checked' : ''}> ${y.toFixed(1)} t</label>`;
+        });
+        document.querySelectorAll('.yield-cb').forEach(cb => cb.addEventListener('change', updateCropApp));
+    }
+
+    function updateCropApp() {
+        if(currentCrop === 'dashboard') return;
+        const cost = parseFloat(document.getElementById('costInput').value) || 0;
+        const subsidy = parseFloat(document.getElementById('subsidyInput').value) || 0;
+        const data = cropData[currentCrop];
+        const selectedYields = Array.from(document.querySelectorAll('.yield-cb:checked')).map(cb => parseFloat(cb.value));
+
+        const table = document.getElementById('profitTable');
+        let html = `<thead><tr><th>Plon (t/ha)</th><th class="th-accent">Punkt 0 (PLN/t)</th>`;
+        data.prices.forEach(p => { html += `<th>Cena ${p} zł</th>`; });
+        html += '</tr></thead><tbody>';
+
+        const chartDatasets = [];
+        const bepDataList = [];
+        const chartColors = ['#F8696B', '#F39C12', '#3498DB', '#63BE7B', '#8E44AD', '#34495E'];
+
+        data.yields.forEach((y, index) => {
+            let bep = (cost - subsidy) / y;
+            if (bep < 0) bep = 0;
+            bepDataList.push(bep);
+
+            html += `<tr><th class="row-header">${y.toFixed(1)}</th>`;
+            html += `<td style="color:var(--ace-red); font-weight:bold;">${formatPLN(bep)}</td>`;
+            
+            let rowData = [];
+            data.prices.forEach(p => {
+                const profit = (y * p) + subsidy - cost;
+                rowData.push(profit);
+                let fontColor = (profit < -2500 || profit >= 3000) ? 'white' : 'black';
+                html += `<td style="background-color: ${getColor(profit)}; color: ${fontColor}; font-weight: bold;">${formatPLN(profit)}</td>`;
+            });
+            html += '</tr>';
+
+            if (selectedYields.includes(y)) {
+                chartDatasets.push({
+                    label: `Plon ${y.toFixed(1)} t/ha`,
+                    data: rowData,
+                    borderColor: chartColors[index % chartColors.length],
+                    backgroundColor: chartColors[index % chartColors.length],
+                    borderWidth: 3, fill: false, tension: 0.1, pointRadius: 4
+                });
+            }
+        });
+        html += '</tbody>';
+        table.innerHTML = html;
+
+        const ctx1 = document.getElementById('profitChart').getContext('2d');
+        if (profitChart) profitChart.destroy();
+        profitChart = new Chart(ctx1, {
+            type: 'line',
+            data: { labels: data.prices.map(p => p + ' zł'), datasets: chartDatasets },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { datalabels: { display: false }, title: { display: true, text: 'Krzywa Rentowności', font: { size: 16 } } },
+                scales: {
+                    y: { title: { display: true, text: 'Zysk / Strata (PLN/ha)', font: {weight: 'bold'} }, grid: { color: (c) => c.tick.value === 0 ? '#C00000' : '#eaeaea', lineWidth: (c) => c.tick.value === 0 ? 3 : 1 } },
+                    x: { title: { display: true, text: 'Cena rynkowa (PLN/t)', font: {weight: 'bold'} } }
+                }
+            }
+        });
+
+        const ctx2 = document.getElementById('bepChart').getContext('2d');
+        if (bepChart) bepChart.destroy();
+        bepChart = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: data.yields.map(y => y.toFixed(1) + ' t'),
+                datasets: [{
+                    label: 'Minimalna cena zwrotu kosztów (PLN/t)',
+                    data: bepDataList,
+                    borderColor: '#C00000', backgroundColor: '#C00000',
+                    borderWidth: 3, fill: false, tension: 0.1, pointRadius: 6, pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                layout: { padding: { top: 30 } },
+                plugins: {
+                    title: { display: true, text: 'Krzywa Punktu Opłacalności (Punkt 0)', font: { size: 16 } },
+                    datalabels: { display: true, align: 'top', offset: 5, color: '#C00000', font: { weight: 'bold', size: 12 }, formatter: (val) => formatPLN(val) }
+                },
+                scales: {
+                    y: { title: { display: true, text: 'Wymagana Cena (PLN/t)', font: {weight: 'bold'} }, suggestedMax: Math.max(...bepDataList) * 1.15 },
+                    x: { title: { display: true, text: 'Plon (t/ha)', font: {weight: 'bold'} } }
+                }
+            }
+        });
+    }
+
+    function switchView(viewKey) {
+        currentCrop = viewKey;
+        const btns = document.querySelectorAll('.tab-btn');
+        btns.forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+
+        if(viewKey === 'dashboard') {
+            document.getElementById('dashboardView').style.display = 'block';
+            document.getElementById('cropView').style.display = 'none';
+            document.getElementById('heroBanner').style.backgroundImage = `url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=1920&q=80')`;
+            document.getElementById('heroSubtext').innerText = 'Porównanie Rentowności Głównych Upraw';
+            renderDashboardTable();
+        } else {
+            document.getElementById('dashboardView').style.display = 'none';
+            document.getElementById('cropView').style.display = 'block';
+            document.getElementById('heroBanner').style.backgroundImage = `url('${cropData[viewKey].bgImg}')`;
+            document.getElementById('heroSubtext').innerText = `Analiza Szczegółowa: ${cropData[viewKey].name}`;
+            loadWIR();
+            renderCheckboxes();
+            updateCropApp();
+        }
+    }
+
+    document.getElementById('costInput').addEventListener('input', updateCropApp);
+    document.getElementById('subsidyInput').addEventListener('input', updateCropApp);
+
+    window.onload = () => {
+        switchView('dashboard');
+    };
+    
+    // --- PWA Service Worker Registration ---
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(registration => console.log('ServiceWorker zarejestrowany dla PWA'))
+          .catch(err => console.log('Błąd ServiceWorkera: ', err));
+      });
+    }
+</script>
+
 </body>
 </html>
