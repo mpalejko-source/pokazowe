@@ -7,7 +7,8 @@
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#203764">
-    <link rel="apple-touch-icon" href="ikonka.png">
+    <!-- Tu podmieniasz na swoją ikonkę na ekran po instalacji (iOS) -->
+    <link rel="apple-touch-icon" href="ikonka.png"> 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
@@ -16,8 +17,29 @@
         :root { --ace-navy: #203764; --ace-red: #C00000; --ace-green: #375623; --ace-bg: #f4f7f6; --ace-light: #ffffff; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--ace-bg); color: #333; margin: 0; padding: 0; }
         
-        #installBanner { background-color: var(--ace-red); color: white; text-align: center; padding: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; display: none; }
-        #installBanner:active { background-color: #900000; }
+        /* ========================================== */
+        /* EKRAN BLOKADY (BRAMKA INSTALACYJNA)        */
+        /* ========================================== */
+        #installGate {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: linear-gradient(135deg, var(--ace-navy), #0a1930); color: white;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; text-align: center; padding: 20px; box-sizing: border-box;
+        }
+        .gate-logo { max-width: 160px; margin-bottom: 20px; border-radius: 12px; background: rgba(255,255,255,0.1); padding: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        #installGate h1 { color: white; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        #installGate p { font-size: 1.1rem; margin-bottom: 30px; opacity: 0.9; line-height: 1.4; max-width: 500px; }
+        
+        .gate-btn { background: var(--ace-red); color: white; border: none; padding: 18px 35px; font-size: 1.2rem; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(200,0,0,0.4); display: none; transition: transform 0.2s; }
+        .gate-btn:active { transform: scale(0.95); }
+        
+        .gate-instructions { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 12px; text-align: left; max-width: 400px; font-size: 1.05rem; line-height: 1.6; border: 1px solid rgba(255,255,255,0.1); display: none; }
+        .gate-instructions span { color: var(--ace-red); font-weight: bold; }
+        
+        /* ========================================== */
+        /* GŁÓWNY WYGLĄD APLIKACJI                    */
+        /* ========================================== */
+        #mainApp { display: none; } /* Domyślnie ukryte, do momentu wykrycia instalacji */
 
         .hero-banner { position: relative; height: 220px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: white; text-shadow: 2px 2px 8px rgba(0,0,0,0.8); }
         .hero-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to right, rgba(32,55,100,0.85), rgba(192,0,0,0.5)); }
@@ -46,16 +68,11 @@
         .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; }
         .checkbox-group label { display: flex; align-items: center; gap: 5px; background: #f8f9fa; padding: 6px 10px; border-radius: 20px; border: 1px solid #ccc; font-size: 0.9rem; }
 
-        .scroll-hint { display: none; text-align: right; font-size: 0.85rem; color: var(--ace-red); font-weight: bold; margin-bottom: 5px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-
-        /* Klasyczny układ Macierzy - Gęsty i analityczny */
         .table-responsive { overflow-x: auto; margin-bottom: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); -webkit-overflow-scrolling: touch; }
         table { width: 100%; border-collapse: collapse; white-space: nowrap; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: center; font-size: 0.95rem; }
         th { background-color: var(--ace-navy); color: white; font-weight: bold; }
         .th-accent { background-color: var(--ace-red) !important; }
-        /* Zamrożenie pierwszej kolumny i nagłówka */
         th.row-header { background-color: var(--ace-navy); position: sticky; left: 0; z-index: 2; box-shadow: 2px 0 5px rgba(0,0,0,0.15); }
         thead th { position: sticky; top: 0; z-index: 1; }
         thead th.row-header { z-index: 3; }
@@ -63,15 +80,13 @@
         .charts-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
         .chart-container { position: relative; height: 350px; background: white; padding: 10px; border-radius: 8px; border: 1px solid #eee; }
 
-        /* Kompresja Macierzy dla telefonów (RWD) */
         @media (max-width: 768px) {
             .hero-banner { height: 160px; }
             .hero-content h1 { font-size: 1.5rem; }
             .container { margin-top: -10px; padding: 10px; }
             .charts-wrapper { grid-template-columns: 1fr; }
-            .scroll-hint { display: block; }
             
-            /* Ultra-kompaktowa siatka danych */
+            /* Kompaktowa macierz dla telefonów */
             th, td { padding: 6px 4px; font-size: 12px; }
             th.row-header { font-size: 12px; padding: 6px 4px; }
             input[type="number"] { font-size: 14px; padding: 8px; }
@@ -81,92 +96,166 @@
 </head>
 <body>
 
-<div id="installBanner" onclick="installApp()">📲 Zainstaluj aplikację ACE Agro na telefonie</div>
-
-<div class="hero-banner" id="heroBanner">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <img src="logo.png" alt="ACE Group Logo" class="hero-logo" onerror="this.style.display='none'">
-        <h1>ACE Group</h1>
-        <p id="heroSubtext">Zaawansowany Kalkulator Rentowności</p>
+<!-- BRAMKA INSTALACYJNA (Widoczna tylko w przeglądarce) -->
+<div id="installGate">
+    <!-- Tu jest wyświetlane pełne logo z nazwą -->
+    <img src="logo.png" alt="ACE Group" class="gate-logo" onerror="this.style.display='none'">
+    <h1>Witaj w ACE Agro</h1>
+    <p>Ten zaawansowany kalkulator rentowności jest dostępny <b>wyłącznie</b> po zainstalowaniu go jako aplikacja na Twoim urządzeniu.</p>
+    
+    <!-- Przycisk Instalacji dla Androida / Chrome -->
+    <button id="androidInstallBtn" class="gate-btn" onclick="triggerInstall()">📲 Instaluj Aplikację</button>
+    
+    <!-- Instrukcja dla Apple iOS -->
+    <div id="iosInstructions" class="gate-instructions">
+        🍏 <span>Wymagana instalacja (Apple iOS)</span><br><br>
+        Aby uruchomić aplikację:<br>
+        1. Kliknij ikonę <b>Udostępnij</b> na dolnym pasku Safari (kwadrat ze strzałką).<br>
+        2. Przewiń w dół i wybierz <b>"Do ekranu początkowego"</b> (plus w kwadracie).<br>
+        3. Aplikacja ACE Agro pojawi się na pulpicie Twojego telefonu!
+    </div>
+    
+    <!-- Instrukcja zapasowa dla PC -->
+    <div id="pcInstructions" class="gate-instructions">
+        💻 <span>Instalacja na komputerze</span><br><br>
+        Korzystasz z PC? Zwróć uwagę na pasek adresu URL na górze (obok gwiazdki zakładek) – kliknij ikonę pobierania/instalacji aplikacji.
     </div>
 </div>
 
-<div class="container">
-    <div class="tabs">
-        <button class="tab-btn dash-btn active" onclick="switchView('dashboard')">📊 Dashboard</button>
-        <button class="tab-btn" onclick="switchView('rzepak')">🌼 Rzepak</button>
-        <button class="tab-btn" onclick="switchView('pszenica')">🌾 Pszenica</button>
-        <button class="tab-btn" onclick="switchView('kukurydza')">🌽 Kuku Sucha</button>
-        <button class="tab-btn" onclick="switchView('kukurydza_mokra')">🌧️ Kuku Mokra</button>
+<!-- ======================================================== -->
+<!-- GŁÓWNA APLIKACJA (UKRYTA DO MOMENTU INSTALACJI)          -->
+<!-- ======================================================== -->
+<div id="mainApp">
+    <div class="hero-banner" id="heroBanner">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <img src="logo.png" alt="ACE Group Logo" class="hero-logo" onerror="this.style.display='none'">
+            <h1>ACE Group</h1>
+            <p id="heroSubtext">Zaawansowany Kalkulator Rentowności</p>
+        </div>
     </div>
-    
-    <!-- DASHBOARD -->
-    <div id="dashboardView" style="display: block;">
-        <h3 style="color: var(--ace-navy); margin-bottom: 5px;">Porównanie Upraw</h3>
-        <p style="color: #666; font-size: 0.85rem; margin-top: 0;">Zmień plon i cenę w tabeli. Tabela przesuwa się w prawo 👉</p>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn dash-btn active" onclick="switchView('dashboard')">📊 Dashboard</button>
+            <button class="tab-btn" onclick="switchView('rzepak')">🌼 Rzepak</button>
+            <button class="tab-btn" onclick="switchView('pszenica')">🌾 Pszenica</button>
+            <button class="tab-btn" onclick="switchView('kukurydza')">🌽 Kuku Sucha</button>
+            <button class="tab-btn" onclick="switchView('kukurydza_mokra')">🌧️ Kuku Mokra</button>
+        </div>
         
-        <div class="table-responsive">
-            <table id="dashTable">
-                <thead>
-                    <tr>
-                        <th class="row-header">Uprawa</th>
-                        <th>Plon (t)</th>
-                        <th>Cena</th>
-                        <th>Koszty</th>
-                        <th>Zysk/ha</th>
-                        <th>ROI</th>
-                    </tr>
-                </thead>
-                <tbody id="dashTableBody"></tbody>
-            </table>
-        </div>
-
-        <div class="charts-wrapper">
-            <div class="chart-container"><canvas id="dashProfitChart"></canvas></div>
-            <div class="chart-container"><canvas id="dashRoiChart"></canvas></div>
-        </div>
-    </div>
-
-    <!-- WIDOK UPRAWY SZCZEGÓŁOWEJ -->
-    <div id="cropView" style="display: none;">
-        <div class="controls">
-            <div class="control-group">
-                <label for="costInput">Koszty Całkowite (PLN/ha):</label>
-                <input type="number" id="costInput" step="50">
+        <!-- DASHBOARD -->
+        <div id="dashboardView" style="display: block;">
+            <h3 style="color: var(--ace-navy); margin-bottom: 5px;">Porównanie Upraw</h3>
+            <p style="color: #666; font-size: 0.85rem; margin-top: 0;">Zmień plon i cenę w tabeli. Tabela przesuwa się w prawo 👉</p>
+            <div class="table-responsive">
+                <table id="dashTable">
+                    <thead>
+                        <tr>
+                            <th class="row-header">Uprawa</th><th>Plon (t)</th><th>Cena</th><th>Koszty</th><th>Zysk/ha</th><th>ROI</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashTableBody"></tbody>
+                </table>
             </div>
-            <div class="control-group">
-                <label for="subsidyInput">Dopłaty (PLN/ha):</label>
-                <input type="number" id="subsidyInput" step="10">
+            <div class="charts-wrapper">
+                <div class="chart-container"><canvas id="dashProfitChart"></canvas></div>
+                <div class="chart-container"><canvas id="dashRoiChart"></canvas></div>
             </div>
-            <button class="btn-action btn-save" onclick="saveSettings()">💾 Zapisz moje koszty</button>
-            <button class="btn-action btn-wir" onclick="loadWIR()">🔄 Zresetuj do WIR</button>
         </div>
 
-        <div class="yield-selector">
-            <h4 style="margin-top:0; font-size: 1rem;">Wykres: Zaznacz plony</h4>
-            <div class="checkbox-group" id="yieldCheckboxes"></div>
-        </div>
+        <!-- WIDOK UPRAWY -->
+        <div id="cropView" style="display: none;">
+            <div class="controls">
+                <div class="control-group"><label>Koszty (PLN/ha):</label><input type="number" id="costInput" step="50"></div>
+                <div class="control-group"><label>Dopłaty (PLN/ha):</label><input type="number" id="subsidyInput" step="10"></div>
+                <button class="btn-action btn-save" onclick="saveSettings()">💾 Zapisz moje koszty</button>
+                <button class="btn-action btn-wir" onclick="loadWIR()">🔄 Zresetuj do WIR</button>
+            </div>
 
-        <h3 style="color: var(--ace-navy); margin-bottom: 5px;">Macierz Wrażliwości (PLN/ha)</h3>
-        <p style="color: #666; font-size: 0.85rem; margin-top: 0;">Przesuń tabelę w prawo, aby zobaczyć wszystkie ceny 👉</p>
-        <div class="table-responsive">
-            <table id="profitTable"></table>
-        </div>
+            <div class="yield-selector">
+                <h4 style="margin-top:0; font-size: 1rem;">Wykres: Zaznacz plony</h4>
+                <div class="checkbox-group" id="yieldCheckboxes"></div>
+            </div>
 
-        <div class="charts-wrapper">
-            <div class="chart-container"><canvas id="profitChart"></canvas></div>
-            <div class="chart-container"><canvas id="bepChart"></canvas></div>
+            <h3 style="color: var(--ace-navy); margin-bottom: 5px;">Macierz Wrażliwości (PLN/ha)</h3>
+            <div class="table-responsive"><table id="profitTable"></table></div>
+
+            <div class="charts-wrapper">
+                <div class="chart-container"><canvas id="profitChart"></canvas></div>
+                <div class="chart-container"><canvas id="bepChart"></canvas></div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    try {
-        Chart.register(ChartDataLabels);
-        Chart.defaults.plugins.datalabels.display = false;
-    } catch(e) {}
+    // ==========================================
+    // LOGIKA BRAMKI (FORCED INSTALLATION GATE)
+    // ==========================================
+    let deferredPrompt;
+    const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
+    function initGate() {
+        if (isStandalone) {
+            // Aplikacja jest zainstalowana -> Odpalamy aplikację!
+            document.getElementById('installGate').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            startApplication(); // Start logiki kalkulatora
+        } else {
+            // Użytkownik wszedł przez link w przeglądarce -> Pokazujemy zaporę
+            document.getElementById('installGate').style.display = 'flex';
+            document.getElementById('mainApp').style.display = 'none';
+            
+            if (isIos) {
+                document.getElementById('iosInstructions').style.display = 'block';
+            } else {
+                // Na Androidzie/PC czekamy ułamek sekundy na event beforeinstallprompt
+                setTimeout(() => {
+                    if(!deferredPrompt && !isIos) {
+                        document.getElementById('pcInstructions').style.display = 'block';
+                    }
+                }, 1500);
+            }
+        }
+    }
+
+    // Nasłuchiwanie systemowego eventu instalacji (Android / Chrome)
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (!isStandalone && !isIos) {
+            document.getElementById('androidInstallBtn').style.display = 'block';
+            document.getElementById('pcInstructions').style.display = 'none';
+        }
+    });
+
+    // Akcja po kliknięciu przycisku na Androidzie
+    function triggerInstall() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choice) => {
+                deferredPrompt = null;
+                // Jeśli zaakceptuje instalację, przy następnym wejściu isStandalone będzie TRUE
+            });
+        }
+    }
+
+    // ==========================================
+    // REJESTRACJA SERVICE WORKERA (PWA)
+    // ==========================================
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.log('Błąd SW: ', err)); });
+    }
+
+    // Odpal sprawdzenie zabezpieczeń na starcie
+    initGate();
+
+
+    // ==========================================
+    // LOGIKA APLIKACJI (Odpala się tylko w trybie Standalone)
+    // ==========================================
     const defaultData = {
         rzepak: { name: "Rzepak", bgImg: 'https://images.unsplash.com/photo-1590038870381-8077b960b777?auto=format&fit=crop&w=1920&q=80', defaultCost: 7875, defaultSubsidy: 502, dashYield: 3.5, dashPrice: 2100, yields: [2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0], prices: [1800, 1900, 2000, 2100, 2200, 2300, 2400] },
         pszenica: { name: "Pszenica Oz.", bgImg: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=1920&q=80', defaultCost: 7925, defaultSubsidy: 1148, dashYield: 6.5, dashPrice: 850, yields: [4.0, 5.0, 6.0, 7.0, 8.0, 9.0], prices: [600, 700, 800, 900, 1000, 1100, 1200] },
@@ -174,15 +263,18 @@
         kukurydza_mokra: { name: "Kuku(Mokra)", bgImg: 'https://images.unsplash.com/photo-1621252171057-0470d091a13d?auto=format&fit=crop&w=1920&q=80', defaultCost: 8570, defaultSubsidy: 502, dashYield: 12.0, dashPrice: 480, yields: [8.0, 10.0, 12.0, 14.0, 16.0], prices: [300, 400, 500, 600, 700, 800] }
     };
 
-    let cropData = JSON.parse(JSON.stringify(defaultData)); 
-    let currentCrop = 'dashboard';
-    let profitChart = null, bepChart = null, dashProfitChart = null, dashRoiChart = null;
+    let cropData, currentCrop, profitChart, bepChart, dashProfitChart, dashRoiChart;
 
-    // Funkcja do formatowania pełnych kwot (Dashboard i Wykresy)
     function formatPLN(value) { return new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 }).format(value); }
-    
-    // Funkcja kolorowania tła
     function getColor(value) { if (value < -2500) return '#F8696B'; if (value < 0) return '#FA9A9C'; if (value >= 0 && value < 1500) return '#FFEB84'; if (value >= 1500 && value < 3000) return '#A1D99B'; return '#63BE7B'; }
+
+    function startApplication() {
+        try { Chart.register(ChartDataLabels); Chart.defaults.plugins.datalabels.display = false; } catch(e) {}
+        cropData = JSON.parse(JSON.stringify(defaultData)); 
+        currentCrop = 'dashboard';
+        loadSettings(); 
+        switchView('dashboard');
+    }
 
     function loadSettings() {
         const saved = localStorage.getItem('aceGroupSettings');
@@ -190,10 +282,8 @@
             const parsed = JSON.parse(saved);
             Object.keys(parsed).forEach(key => {
                 if (cropData[key]) {
-                    cropData[key].defaultCost = parsed[key].defaultCost;
-                    cropData[key].defaultSubsidy = parsed[key].defaultSubsidy;
-                    cropData[key].dashYield = parsed[key].dashYield || cropData[key].dashYield;
-                    cropData[key].dashPrice = parsed[key].dashPrice || cropData[key].dashPrice;
+                    cropData[key].defaultCost = parsed[key].defaultCost; cropData[key].defaultSubsidy = parsed[key].defaultSubsidy;
+                    cropData[key].dashYield = parsed[key].dashYield || cropData[key].dashYield; cropData[key].dashPrice = parsed[key].dashPrice || cropData[key].dashPrice;
                 }
             });
         }
@@ -210,56 +300,36 @@
 
     function loadWIR() {
         if (currentCrop !== 'dashboard') {
-            cropData[currentCrop].defaultCost = defaultData[currentCrop].defaultCost;
-            cropData[currentCrop].defaultSubsidy = defaultData[currentCrop].defaultSubsidy;
-            document.getElementById('costInput').value = cropData[currentCrop].defaultCost;
-            document.getElementById('subsidyInput').value = cropData[currentCrop].defaultSubsidy;
+            cropData[currentCrop].defaultCost = defaultData[currentCrop].defaultCost; cropData[currentCrop].defaultSubsidy = defaultData[currentCrop].defaultSubsidy;
+            document.getElementById('costInput').value = cropData[currentCrop].defaultCost; document.getElementById('subsidyInput').value = cropData[currentCrop].defaultSubsidy;
             updateCropApp();
         }
     }
 
-    // DASHBOARD
     function renderDashboardTable() {
-        const tbody = document.getElementById('dashTableBody');
-        tbody.innerHTML = '';
+        const tbody = document.getElementById('dashTableBody'); tbody.innerHTML = '';
         Object.keys(cropData).forEach(key => {
             const data = cropData[key];
             let profit = (data.dashYield * data.dashPrice) + data.defaultSubsidy - data.defaultCost;
             let roi = (profit / data.defaultCost) * 100;
-            tbody.innerHTML += `
-            <tr>
-                <th class="row-header" style="font-size: 0.85rem; padding: 6px;">${data.name}</th>
-                <td><input type="number" class="dash-input" value="${data.dashYield}" step="0.5" onchange="updateDashData('${key}', 'dashYield', this.value)"></td>
-                <td><input type="number" class="dash-input" value="${data.dashPrice}" step="10" onchange="updateDashData('${key}', 'dashPrice', this.value)"></td>
-                <td style="color:#666; font-size: 0.75rem;">K: ${formatPLN(data.defaultCost)}<br>D: ${formatPLN(data.defaultSubsidy)}</td>
-                <td style="font-weight: bold; background-color: ${getColor(profit)}; color: ${profit < -2500 || profit >= 3000 ? 'white' : 'black'};">${formatPLN(profit)}</td>
-                <td style="font-weight: bold; color: ${roi < 0 ? 'var(--ace-red)' : 'var(--ace-green)'};">${roi.toFixed(0)}%</td>
-            </tr>`;
+            tbody.innerHTML += `<tr><th class="row-header" style="font-size: 0.85rem; padding: 6px;">${data.name}</th><td><input type="number" class="dash-input" value="${data.dashYield}" step="0.5" onchange="updateDashData('${key}', 'dashYield', this.value)"></td><td><input type="number" class="dash-input" value="${data.dashPrice}" step="10" onchange="updateDashData('${key}', 'dashPrice', this.value)"></td><td style="color:#666; font-size: 0.75rem;">K: ${formatPLN(data.defaultCost)}<br>D: ${formatPLN(data.defaultSubsidy)}</td><td style="font-weight: bold; background-color: ${getColor(profit)}; color: ${profit < -2500 || profit >= 3000 ? 'white' : 'black'};">${formatPLN(profit)}</td><td style="font-weight: bold; color: ${roi < 0 ? 'var(--ace-red)' : 'var(--ace-green)'};">${roi.toFixed(0)}%</td></tr>`;
         });
         updateDashboardCharts();
     }
 
-    function updateDashData(key, field, value) { 
-        cropData[key][field] = parseFloat(value) || 0; 
-        localStorage.setItem('aceGroupSettings', JSON.stringify(cropData)); 
-        renderDashboardTable(); 
-    }
+    function updateDashData(key, field, value) { cropData[key][field] = parseFloat(value) || 0; localStorage.setItem('aceGroupSettings', JSON.stringify(cropData)); renderDashboardTable(); }
 
     function updateDashboardCharts() {
         const labels = [], profits = [], rois = [], profitColors = [], roiColors = [];
         Object.keys(cropData).forEach(key => {
-            const data = cropData[key];
-            let profit = (data.dashYield * data.dashPrice) + data.defaultSubsidy - data.defaultCost;
-            labels.push(data.name.replace(' (Sucha)','').replace(' (Mokra)',''));
-            profits.push(profit); rois.push((profit / data.defaultCost) * 100);
+            const data = cropData[key]; let profit = (data.dashYield * data.dashPrice) + data.defaultSubsidy - data.defaultCost;
+            labels.push(data.name.replace(' (Sucha)','').replace(' (Mokra)','')); profits.push(profit); rois.push((profit / data.defaultCost) * 100);
             profitColors.push(profit >= 0 ? '#375623' : '#C00000'); roiColors.push((profit / data.defaultCost) >= 0 ? '#203764' : '#C00000');
         });
-        
         try {
             const ctxP = document.getElementById('dashProfitChart').getContext('2d');
             if (dashProfitChart) dashProfitChart.destroy();
             dashProfitChart = new Chart(ctxP, { type: 'bar', data: { labels: labels, datasets: [{ label: 'Zysk (PLN/ha)', data: profits, backgroundColor: profitColors }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Zysk (PLN/ha)'}, datalabels: { display: true, color: 'white', font: {weight: 'bold', size: 10}, formatter: (v) => formatPLN(v) } } } });
-            
             const ctxR = document.getElementById('dashRoiChart').getContext('2d');
             if (dashRoiChart) dashRoiChart.destroy();
             dashRoiChart = new Chart(ctxR, { type: 'bar', data: { labels: labels, datasets: [{ label: 'ROI (%)', data: rois, backgroundColor: roiColors }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Zwrot ROI (%)'}, datalabels: { display: true, color: 'white', font: {weight: 'bold', size: 10}, formatter: (v) => v.toFixed(1) + '%' } } } });
@@ -267,9 +337,7 @@
     }
 
     function renderCheckboxes() {
-        const data = cropData[currentCrop];
-        const container = document.getElementById('yieldCheckboxes');
-        container.innerHTML = '';
+        const data = cropData[currentCrop]; const container = document.getElementById('yieldCheckboxes'); container.innerHTML = '';
         data.yields.forEach((y, i) => {
             const isChecked = (i === 0 || i === Math.floor(data.yields.length/2) || i === data.yields.length-1);
             container.innerHTML += `<label><input type="checkbox" class="yield-cb" value="${y}" ${isChecked ? 'checked' : ''}> ${y.toFixed(1)}t</label>`;
@@ -279,43 +347,28 @@
 
     function updateCropApp() {
         if(currentCrop === 'dashboard') return;
-        const cost = parseFloat(document.getElementById('costInput').value) || 0;
-        const subsidy = parseFloat(document.getElementById('subsidyInput').value) || 0;
-        const data = cropData[currentCrop];
-        const selectedYields = Array.from(document.querySelectorAll('.yield-cb:checked')).map(cb => parseFloat(cb.value));
-        
-        // KOMPAKTOWA MACIERZ (2D)
+        const cost = parseFloat(document.getElementById('costInput').value) || 0; const subsidy = parseFloat(document.getElementById('subsidyInput').value) || 0;
+        const data = cropData[currentCrop]; const selectedYields = Array.from(document.querySelectorAll('.yield-cb:checked')).map(cb => parseFloat(cb.value));
         const table = document.getElementById('profitTable');
         let html = `<thead><tr><th class="row-header" style="font-size:0.75rem;">Plon \\ Cena</th><th class="th-accent">P. 0</th>`;
-        data.prices.forEach(p => { html += `<th>${p}</th>`; });
-        html += '</tr></thead><tbody>';
-
+        data.prices.forEach(p => { html += `<th>${p}</th>`; }); html += '</tr></thead><tbody>';
         const chartDatasets = [], bepDataList = [], chartColors = ['#F8696B', '#F39C12', '#3498DB', '#63BE7B', '#8E44AD', '#34495E'];
-        
         data.yields.forEach((y, index) => {
-            let bep = Math.max(0, (cost - subsidy) / y);
-            bepDataList.push(bep);
-            
-            html += `<tr><th class="row-header">${y.toFixed(1)}</th>`;
-            html += `<td style="color:var(--ace-red); font-weight:bold;">${bep.toFixed(0)}</td>`;
-            
+            let bep = Math.max(0, (cost - subsidy) / y); bepDataList.push(bep);
+            html += `<tr><th class="row-header">${y.toFixed(1)}</th><td style="color:var(--ace-red); font-weight:bold;">${bep.toFixed(0)}</td>`;
             let rowData = [];
             data.prices.forEach(p => {
                 const profit = (y * p) + subsidy - cost; rowData.push(profit);
-                // Kompresja danych (brak PLN w macierzy)
                 html += `<td style="background-color: ${getColor(profit)}; color: ${(profit < -2500 || profit >= 3000) ? 'white' : 'black'}; font-weight: bold;">${formatPLN(profit)}</td>`;
             });
             html += '</tr>';
-            
             if (selectedYields.includes(y)) chartDatasets.push({ label: `${y.toFixed(1)}t`, data: rowData, borderColor: chartColors[index % chartColors.length], backgroundColor: chartColors[index % chartColors.length], borderWidth: 2, fill: false, tension: 0.1, pointRadius: 2 });
         });
         html += '</tbody>'; table.innerHTML = html;
-
         try {
             const ctx1 = document.getElementById('profitChart').getContext('2d');
             if (profitChart) profitChart.destroy();
             profitChart = new Chart(ctx1, { type: 'line', data: { labels: data.prices.map(p => p), datasets: chartDatasets }, options: { responsive: true, maintainAspectRatio: false, plugins: { datalabels: { display: false }, title: { display: true, text: 'Zysk/Strata (PLN/ha)' } }, scales: { y: { grid: { color: (c) => c.tick.value === 0 ? '#C00000' : '#eaeaea', lineWidth: (c) => c.tick.value === 0 ? 2 : 1 } } } } });
-
             const ctx2 = document.getElementById('bepChart').getContext('2d');
             if (bepChart) bepChart.destroy();
             bepChart = new Chart(ctx2, { type: 'line', data: { labels: data.yields.map(y => y.toFixed(1) + 't'), datasets: [{ label: 'Punkt 0 (PLN/t)', data: bepDataList, borderColor: '#C00000', backgroundColor: '#C00000', borderWidth: 2, fill: false, tension: 0.1, pointRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 25 } }, plugins: { title: { display: true, text: 'Punkt 0 (Wymagana Cena)' }, datalabels: { display: true, align: 'top', offset: 3, color: '#C00000', font: { weight: 'bold', size: 10 }, formatter: (val) => val.toFixed(0) } }, scales: { y: { suggestedMax: Math.max(...bepDataList) * 1.15 } } } });
@@ -324,9 +377,7 @@
 
     function switchView(viewKey) {
         currentCrop = viewKey;
-        const btns = document.querySelectorAll('.tab-btn');
-        btns.forEach(btn => btn.classList.remove('active'));
-        event.currentTarget.classList.add('active');
+        const btns = document.querySelectorAll('.tab-btn'); btns.forEach(btn => btn.classList.remove('active')); event.currentTarget.classList.add('active');
         if(viewKey === 'dashboard') {
             document.getElementById('dashboardView').style.display = 'block'; document.getElementById('cropView').style.display = 'none';
             document.getElementById('heroBanner').style.backgroundImage = `url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=1920&q=80')`;
@@ -334,43 +385,12 @@
         } else {
             document.getElementById('dashboardView').style.display = 'none'; document.getElementById('cropView').style.display = 'block';
             document.getElementById('heroBanner').style.backgroundImage = `url('${cropData[viewKey].bgImg}')`;
-            document.getElementById('costInput').value = cropData[viewKey].defaultCost;
-            document.getElementById('subsidyInput').value = cropData[viewKey].defaultSubsidy;
+            document.getElementById('costInput').value = cropData[viewKey].defaultCost; document.getElementById('subsidyInput').value = cropData[viewKey].defaultSubsidy;
             renderCheckboxes(); updateCropApp();
         }
     }
 
-    document.getElementById('costInput').addEventListener('input', updateCropApp);
-    document.getElementById('subsidyInput').addEventListener('input', updateCropApp);
-
-    window.onload = () => { loadSettings(); switchView('dashboard'); };
-    
-    // PWA & INSTALACJA
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.log('Błąd SW: ', err)); });
-    }
-
-    let deferredPrompt;
-    const banner = document.getElementById('installBanner');
-    
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault(); deferredPrompt = e; banner.style.display = 'block';
-    });
-
-    function installApp() {
-        const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-        if(isIos) {
-            alert("🍏 Instalacja na iOS:\n\n1. Kliknij ikonę [Udostępnij] (kwadrat ze strzałką)\n2. Wybierz 'Do ekranu początkowego'.");
-        } else if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(() => { deferredPrompt = null; banner.style.display = 'none'; });
-        }
-    }
-
-    const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-    const isStandalone = ('standalone' in window.navigator) && window.navigator.standalone;
-    if (isIos && !isStandalone) banner.style.display = 'block';
-    if (window.matchMedia('(display-mode: standalone)').matches || isStandalone) banner.style.display = 'none';
+    document.getElementById('costInput').addEventListener('input', updateCropApp); document.getElementById('subsidyInput').addEventListener('input', updateCropApp);
 </script>
 
 </body>
